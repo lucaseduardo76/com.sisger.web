@@ -1,5 +1,6 @@
 package com.sisger.demo.user.domain;
 
+import com.sisger.demo.company.domain.Company;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +33,10 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String cpf;
     private Role role;
-    private String companyId;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 
 
     @Override
