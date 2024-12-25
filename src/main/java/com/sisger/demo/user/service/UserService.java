@@ -1,9 +1,14 @@
 package com.sisger.demo.user.service;
 
+import com.sisger.demo.authorization.domain.AuthenticationDTO;
+import com.sisger.demo.infra.security.TokenService;
 import com.sisger.demo.user.domain.RegisterDTO;
 import com.sisger.demo.user.domain.User;
 import com.sisger.demo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +16,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final TokenService tokenService;
+    private final UserService userService;
 
     public User create(RegisterDTO data){
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.getPassword());
@@ -24,7 +32,16 @@ public class UserService {
                 .password(encryptedPassword)
                 .build();
 
-        this.userRepository.save(newUser);
+         return userRepository.save(newUser);
     }
+
+    public String login(AuthenticationDTO data){
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
+        var auth = this.authenticationManager.authenticate(usernamePassword);
+
+        return tokenService.generateToken((User) auth.getPrincipal());
+
+    }
+
 
 }
