@@ -39,6 +39,8 @@ public class User implements UserDetails {
     @JoinColumn(name = "company_id")
     private Company company;
 
+
+
     @ManyToOne
     @JoinColumn(name = "section_id")
     private Section section;

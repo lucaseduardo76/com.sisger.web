@@ -26,6 +26,11 @@ public class Company {
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Section> section;
 
+    @OneToOne
+    @JoinColumn(name = "mainUserId")
+    private User mainUser;
+
+
     @JsonIgnore
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User> employees;
