@@ -29,6 +29,7 @@ public class CompanyController implements CompanyInterface{
 
     private final CompanyService companyService;
     private final TokenService tokenService;
+    private final UserService userService;
 
     @Override
     public ResponseEntity<User> findAllEmployeeByCompany(String token, String id) {
@@ -51,8 +52,9 @@ public class CompanyController implements CompanyInterface{
         if(message != null)
             throw new UnauthorizedException(message);
 
-        var companyResponse = companyService.save(requestCompanyDTO, user);
 
+        var companyResponse = companyService.save(requestCompanyDTO, user);
+        userService.setComanyToMain(user, companyResponse.getId());
 
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")

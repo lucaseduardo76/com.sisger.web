@@ -66,5 +66,10 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
+    public void setComanyToMain(User user, String companyId){
+        user.setCompany(companyService.findById(companyId));
+        userRepository.save(user);
+    }
+
 
 }
