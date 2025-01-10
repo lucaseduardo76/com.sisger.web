@@ -46,7 +46,7 @@ public class UserService {
                     .password(encryptedPassword)
                     .build();
 
-            System.out.println("Aqui cheguei");
+
             AuthorityChecker.requireMainAuthority(newUser);
 
         }
