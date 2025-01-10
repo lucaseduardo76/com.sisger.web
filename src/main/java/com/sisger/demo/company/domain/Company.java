@@ -3,10 +3,8 @@ package com.sisger.demo.company.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sisger.demo.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,20 +13,20 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 @Table(name = "tb_company")
 public class Company {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private String name;
+    private String razaoSocial;
+    @Size(min = 14)
+    private Integer cnpj;
+    private Integer cpf;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Section> section;
-
-    @OneToOne
-    @JoinColumn(name = "mainUserId")
-    private User mainUser;
 
 
     @JsonIgnore

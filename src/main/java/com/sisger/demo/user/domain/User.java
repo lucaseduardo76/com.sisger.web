@@ -39,8 +39,6 @@ public class User implements UserDetails {
     @JoinColumn(name = "company_id")
     private Company company;
 
-
-
     @ManyToOne
     @JoinColumn(name = "section_id")
     private Section section;
@@ -61,6 +59,12 @@ public class User implements UserDetails {
                 authorities.add(new SimpleGrantedAuthority("ROLE_DIRECTOR"));
                 authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
                 authorities.add(new SimpleGrantedAuthority("ROLE_EMPLOYEE"));
+                break;
+            case MAIN:
+                authorities.add(new SimpleGrantedAuthority("ROLE_DIRECTOR"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_EMPLOYEE"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_MAIN"));
                 break;
         }
 

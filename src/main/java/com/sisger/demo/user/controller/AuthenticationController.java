@@ -3,6 +3,7 @@ package com.sisger.demo.user.controller;
 
 import com.sisger.demo.authorization.domain.AuthenticationDTO;
 import com.sisger.demo.authorization.domain.LoginResponseDTO;
+import com.sisger.demo.exception.EmailAlreadyExistsException;
 import com.sisger.demo.user.domain.RegisterDTO;
 import com.sisger.demo.user.domain.User;
 import com.sisger.demo.user.repository.UserRepository;
@@ -34,7 +35,9 @@ public class AuthenticationController implements AuthenticationInterface{
 
    @Override
     public ResponseEntity<User> register(@RequestBody @Valid RegisterDTO data){
-        if(this.userRepository.findByEmail(data.getEmail()) != null) return ResponseEntity.badRequest().build();
+        if(this.userRepository.findByEmail(data.getEmail()) == null)
+            throw new EmailAlreadyExistsException("Email "+ data.getEmail() +" já existe na base de dados");
+
         User user = userService.create(data);
 
         URI uri  = ServletUriComponentsBuilder

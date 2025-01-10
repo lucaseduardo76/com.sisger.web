@@ -1,6 +1,8 @@
 package com.sisger.demo.company.controller;
 
 import com.sisger.demo.company.domain.Company;
+import com.sisger.demo.company.dto.RequestCompanyDTO;
+import com.sisger.demo.company.dto.ResponseCompanyDTO;
 import com.sisger.demo.user.domain.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,15 +11,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("company")
 public interface CompanyInterface {
 
-    @GetMapping
+    @GetMapping(value = "/employee")
     public ResponseEntity<User> findAllEmployeeByCompany(
             @RequestHeader(name = "Authorization", required = true) String token, String id);
-    @GetMapping
+    @GetMapping(value = "/employee/section")
     public ResponseEntity<User> findAllEmployeeBySection(
             @RequestHeader(name = "Authorization", required = true) String token, String id);
 
     @PostMapping
-    public ResponseEntity<Company> createCompany(
-            @RequestHeader(name = "Authorization", required = true) String token, String id);
+    public ResponseEntity<ResponseCompanyDTO> createCompany(
+            @RequestHeader(name = "Authorization", required = true) String token, RequestCompanyDTO requestCompanyDTO, String idMainAcc);
 
 }

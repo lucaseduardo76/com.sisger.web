@@ -6,7 +6,10 @@ import com.sisger.demo.infra.security.TokenService;
 import com.sisger.demo.user.domain.RegisterDTO;
 import com.sisger.demo.user.domain.User;
 import com.sisger.demo.user.repository.UserRepository;
+import com.sisger.demo.util.AuthorityChecker;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
@@ -24,14 +27,29 @@ public class UserService {
 
     public User create(RegisterDTO data){
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.getPassword());
-        User newUser = User.builder()
-                .email(data.getEmail())
-                .role(data.getRole())
-                .cpf(data.getCpf())
-                .name(data.getName())
-                .company(companyService.findById(data.getCompanyId()))
-                .password(encryptedPassword)
-                .build();
+        User newUser;
+        if(data.getCompanyId() != null) {
+            newUser = User.builder()
+                    .email(data.getEmail())
+                    .role(data.getRole())
+                    .cpf(data.getCpf())
+                    .name(data.getName())
+                    .company(companyService.findById(data.getCompanyId()))
+                    .password(encryptedPassword)
+                    .build();
+        }else{
+            newUser = User.builder()
+                    .email(data.getEmail())
+                    .role(data.getRole())
+                    .cpf(data.getCpf())
+                    .name(data.getName())
+                    .password(encryptedPassword)
+                    .build();
+
+            System.out.println("Aqui cheguei");
+            AuthorityChecker.requireMainAuthority(newUser);
+
+        }
 
          return userRepository.save(newUser);
     }
