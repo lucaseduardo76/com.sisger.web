@@ -63,6 +63,7 @@ public class TokenService {
     public User getUserByToken(String token) {
         token = token.substring(7).trim();
         String id = JWT.decode(token).getSubject();
-        return userRepository.findById(id).orElse(null);
+        System.out.println(id);
+        return userRepository.findByEmail(id);
     }
 }

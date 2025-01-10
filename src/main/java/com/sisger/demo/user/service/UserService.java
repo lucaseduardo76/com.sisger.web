@@ -1,14 +1,18 @@
 package com.sisger.demo.user.service;
 
 import com.sisger.demo.authorization.domain.AuthenticationDTO;
+import com.sisger.demo.company.service.CompanyService;
 import com.sisger.demo.infra.security.TokenService;
 import com.sisger.demo.user.domain.RegisterDTO;
 import com.sisger.demo.user.domain.User;
 import com.sisger.demo.user.repository.UserRepository;
+import com.sisger.demo.util.AuthorityChecker;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,18 +23,33 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final TokenService tokenService;
-    private final UserService userService;
+    private final CompanyService companyService;
 
     public User create(RegisterDTO data){
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.getPassword());
-        User newUser = User.builder()
-                .email(data.getEmail())
-                .role(data.getRole())
-                .cpf(data.getCpf())
-                .name(data.getName())
-                .companyId(data.getCompanyId())
-                .password(encryptedPassword)
-                .build();
+        User newUser;
+        if(data.getCompanyId() != null) {
+            newUser = User.builder()
+                    .email(data.getEmail())
+                    .role(data.getRole())
+                    .cpf(data.getCpf())
+                    .name(data.getName())
+                    .company(companyService.findById(data.getCompanyId()))
+                    .password(encryptedPassword)
+                    .build();
+        }else{
+            newUser = User.builder()
+                    .email(data.getEmail())
+                    .role(data.getRole())
+                    .cpf(data.getCpf())
+                    .name(data.getName())
+                    .password(encryptedPassword)
+                    .build();
+
+
+            AuthorityChecker.requireMainAuthority(newUser);
+
+        }
 
          return userRepository.save(newUser);
     }
@@ -41,6 +60,15 @@ public class UserService {
 
         return tokenService.generateToken((User) auth.getPrincipal());
 
+    }
+
+    public User findById(String id){
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public void setComanyToMain(User user, String companyId){
+        user.setCompany(companyService.findById(companyId));
+        userRepository.save(user);
     }
 
 
