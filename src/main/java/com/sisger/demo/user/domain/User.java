@@ -1,6 +1,7 @@
 package com.sisger.demo.user.domain;
 
 import com.sisger.demo.company.domain.Company;
+import com.sisger.demo.company.domain.Section;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,6 +38,10 @@ public class User implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @ManyToOne
+    @JoinColumn(name = "section_id")
+    private Section section;
 
 
     @Override

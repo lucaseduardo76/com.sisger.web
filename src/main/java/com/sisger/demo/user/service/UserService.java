@@ -1,6 +1,7 @@
 package com.sisger.demo.user.service;
 
 import com.sisger.demo.authorization.domain.AuthenticationDTO;
+import com.sisger.demo.company.service.CompanyService;
 import com.sisger.demo.infra.security.TokenService;
 import com.sisger.demo.user.domain.RegisterDTO;
 import com.sisger.demo.user.domain.User;
@@ -8,7 +9,7 @@ import com.sisger.demo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final TokenService tokenService;
-    private final UserService userService;
+    private final CompanyService companyService;
 
     public User create(RegisterDTO data){
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.getPassword());
@@ -28,7 +29,7 @@ public class UserService {
                 .role(data.getRole())
                 .cpf(data.getCpf())
                 .name(data.getName())
-                .companyId(data.getCompanyId())
+                .company(companyService.findById(data.getCompanyId()))
                 .password(encryptedPassword)
                 .build();
 

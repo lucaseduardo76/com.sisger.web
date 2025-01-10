@@ -26,7 +26,7 @@ public class AuthenticationController implements AuthenticationInterface{
     private final UserService userService;
 
     @Override
-    public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data){
 
         var token = userService.login(data);
         return ResponseEntity.ok(new LoginResponseDTO(token));
