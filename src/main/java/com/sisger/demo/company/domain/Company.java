@@ -21,9 +21,13 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String razaoSocial;
-    @Size(min = 14)
     private Integer cnpj;
     private Integer cpf;
+
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "mainAccountId", referencedColumnName = "id")
+    private User mainAccount;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Section> section;

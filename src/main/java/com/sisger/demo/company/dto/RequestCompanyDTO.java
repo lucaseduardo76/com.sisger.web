@@ -15,9 +15,8 @@ public class RequestCompanyDTO {
 
     @NotNull
     private String razaoSocial;
-    @Size(min = 14)
+    @Size(min = 11, max = 50)
     private Integer cnpj;
-    @Size(min = 14)
     private Integer cpf;
 
 

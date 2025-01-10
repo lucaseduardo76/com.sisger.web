@@ -18,8 +18,9 @@ public interface CompanyInterface {
     public ResponseEntity<User> findAllEmployeeBySection(
             @RequestHeader(name = "Authorization", required = true) String token, String id);
 
-    @PostMapping
+    @PostMapping(value = "/create")
     public ResponseEntity<ResponseCompanyDTO> createCompany(
-            @RequestHeader(name = "Authorization", required = true) String token, RequestCompanyDTO requestCompanyDTO, String idMainAcc);
+            @RequestHeader(name = "Authorization", required = true) String token, @RequestParam String idMainAcc,
+            @RequestBody RequestCompanyDTO requestCompanyDTO);
 
 }
