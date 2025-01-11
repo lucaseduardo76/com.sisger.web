@@ -26,7 +26,6 @@ public class CompanyService implements CompanyServiceInteface{
         Company company = Company.builder()
                 .razaoSocial(requestcompanyDTO.getRazaoSocial())
                 .cnpj(requestcompanyDTO.getCnpj())
-                .cpf(requestcompanyDTO.getCpf())
                 .mainAccount(user)
                 .build();
 

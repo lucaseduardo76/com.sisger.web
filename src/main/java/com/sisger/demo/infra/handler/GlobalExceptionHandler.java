@@ -1,15 +1,12 @@
 package com.sisger.demo.infra.handler;
 
-import com.sisger.demo.exception.CpfAlreadyExistsException;
-import com.sisger.demo.exception.EmailAlreadyExistsException;
-import com.sisger.demo.exception.UnauthorizedException;
-import com.sisger.demo.exception.details.CpfAlreadyExistsDetails;
-import com.sisger.demo.exception.details.EmailAlreadyExistsDetails;
-import com.sisger.demo.exception.details.UnauthorizedExceptionDetails;
+import com.sisger.demo.exception.*;
+import com.sisger.demo.exception.details.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
@@ -17,11 +14,37 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<UnauthorizedExceptionDetails> handleUnauthorizedException(UnauthorizedException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                UnauthorizedExceptionDetails.builder()
+    @ExceptionHandler(InternalServerErrorException.class)
+    public ResponseEntity<InternalServerErroDetails> handleInternalServerErrorException(InternalServerErrorException ex){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                InternalServerErroDetails.builder()
+                        .title("Internal Server Error")
+                        .details(ex.getMessage())
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .developerMessage(ex.getClass().getName())
+                        .timestamp(LocalDateTime.now())
+                        .build()
+
+        );
+    }
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<BadRequestDetails> handleBadRequestException(BadRequestException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                BadRequestDetails.builder()
                         .title("Bad Request check the documentation")
+                        .details(ex.getMessage())
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .developerMessage(ex.getClass().getName())
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<UnauthorizedDetails> handleUnauthorizedException(UnauthorizedException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                UnauthorizedDetails.builder()
+                        .title("Unauthorized request check the documentation")
                         .details(ex.getMessage())
                         .status(HttpStatus.UNAUTHORIZED.value())
                         .developerMessage(ex.getClass().getName())

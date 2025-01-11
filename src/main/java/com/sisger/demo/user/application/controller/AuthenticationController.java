@@ -3,8 +3,11 @@ package com.sisger.demo.user.application.controller;
 
 import com.sisger.demo.authorization.domain.AuthenticationDTO;
 import com.sisger.demo.authorization.domain.LoginResponseDTO;
+import com.sisger.demo.company.application.service.CompanyService;
+import com.sisger.demo.exception.BadRequestException;
 import com.sisger.demo.exception.CpfAlreadyExistsException;
 import com.sisger.demo.exception.EmailAlreadyExistsException;
+import com.sisger.demo.user.domain.Role;
 import com.sisger.demo.user.domain.dto.RegisterDTO;
 import com.sisger.demo.user.domain.User;
 import com.sisger.demo.user.infra.repository.UserRepository;
@@ -26,6 +29,7 @@ public class AuthenticationController implements AuthenticationInterface{
 
     private final UserRepository userRepository;
     private final UserService userService;
+    private final CompanyService companyService;
 
     @Override
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data){
@@ -35,14 +39,12 @@ public class AuthenticationController implements AuthenticationInterface{
     }
 
    @Override
-    public ResponseEntity<User> register(@RequestBody @Valid RegisterDTO data){
-        if(this.userRepository.findByEmail(data.getEmail()) != null)
-            throw new EmailAlreadyExistsException("Email "+ data.getEmail() +" já existe na base de dados");
+    public ResponseEntity<User> register(@RequestBody @Valid RegisterDTO registerDTO){
 
-       if(this.userRepository.findByCpf(data.getCpf()) != null)
-           throw new CpfAlreadyExistsException("CPF "+ data.getCpf() +" já existe na base de dados");
+        User user = userService.create(registerDTO);
 
-        User user = userService.create(data);
+       var companyResponse = companyService.save(registerDTO.getCompany(), user);
+       userService.setCompanyToMain(user, companyResponse.getId());
 
         URI uri  = ServletUriComponentsBuilder
                 .fromCurrentRequest()

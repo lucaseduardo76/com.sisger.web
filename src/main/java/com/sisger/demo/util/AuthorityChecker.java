@@ -31,7 +31,7 @@ public class AuthorityChecker {
     }
 
     public static void requireManagerAuthority(User user) {
-        if (!hasMainAuthority(user)) {
+        if (!hasManagerAuthority(user)) {
             throw new UnauthorizedException("Usuário não possui autoridade MANAGER, consulte o administrador.");
         }
     }

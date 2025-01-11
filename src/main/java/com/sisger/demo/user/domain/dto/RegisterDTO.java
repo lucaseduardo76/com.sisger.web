@@ -1,5 +1,6 @@
 package com.sisger.demo.user.domain.dto;
 
+import com.sisger.demo.company.domain.dto.RequestCompanyDTO;
 import com.sisger.demo.user.domain.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -21,11 +22,6 @@ public class RegisterDTO {
     @NotNull(message = "Password cannot be null")
     @Size(min = 3)
     private String password;
-    @NotNull(message = "CPF cannot be null/empty")
-    private String cpf;
-    @NotNull(message = "role cannot be null")
-    private Role role;
-    @NotNull(message = "You must indicate what company are you working on")
-    private String companyId;
+    private RequestCompanyDTO company;
 
 }

@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Builder
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode
 @Table(name = "tb_company")
 public class Company {
 

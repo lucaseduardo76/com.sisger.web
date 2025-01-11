@@ -1,0 +1,2 @@
+Falta implementar um findALlUserByCompany para listar todos os usuarios de uma empresa, lembrando de tirar o user main dessa lista,
+esse é o proximo passo, amanha pense no restante

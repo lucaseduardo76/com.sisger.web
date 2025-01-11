@@ -5,5 +5,5 @@ import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder
-public class UnauthorizedExceptionDetails extends ExceptionDetails {
+public class InternalServerErroDetails extends ExceptionDetails{
 }
