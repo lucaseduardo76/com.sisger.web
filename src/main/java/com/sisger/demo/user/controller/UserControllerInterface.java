@@ -2,17 +2,16 @@ package com.sisger.demo.user.controller;
 
 
 import com.sisger.demo.user.domain.User;
+import com.sisger.demo.user.domain.dto.ChangePasswordDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("user")
 public interface UserControllerInterface {
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user);
+    @PutMapping(value = "change-password")
+    public void changePassword(@RequestHeader(name = "Authorization", required = true) String token,
+                               @RequestBody ChangePasswordDTO changePasswordDTO);
 
 }

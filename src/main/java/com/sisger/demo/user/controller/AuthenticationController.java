@@ -5,7 +5,7 @@ import com.sisger.demo.authorization.domain.AuthenticationDTO;
 import com.sisger.demo.authorization.domain.LoginResponseDTO;
 import com.sisger.demo.exception.CpfAlreadyExistsException;
 import com.sisger.demo.exception.EmailAlreadyExistsException;
-import com.sisger.demo.user.domain.RegisterDTO;
+import com.sisger.demo.user.domain.dto.RegisterDTO;
 import com.sisger.demo.user.domain.User;
 import com.sisger.demo.user.repository.UserRepository;
 import com.sisger.demo.user.service.UserService;

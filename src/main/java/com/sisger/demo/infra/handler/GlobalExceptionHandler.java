@@ -19,11 +19,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<UnauthorizedExceptionDetails> handleUnauthorizedException(UnauthorizedException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                 UnauthorizedExceptionDetails.builder()
                         .title("Bad Request check the documentation")
                         .details(ex.getMessage())
-                        .status(HttpStatus.BAD_REQUEST.value())
+                        .status(HttpStatus.UNAUTHORIZED.value())
                         .developerMessage(ex.getClass().getName())
                         .timestamp(LocalDateTime.now())
                         .build()

@@ -1,7 +1,7 @@
 package com.sisger.demo.user.controller;
 
 import com.sisger.demo.authorization.domain.AuthenticationDTO;
-import com.sisger.demo.user.domain.RegisterDTO;
+import com.sisger.demo.user.domain.dto.RegisterDTO;
 import com.sisger.demo.user.domain.User;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
