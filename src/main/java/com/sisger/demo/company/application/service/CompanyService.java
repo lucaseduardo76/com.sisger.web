@@ -1,12 +1,10 @@
-package com.sisger.demo.company.service;
+package com.sisger.demo.company.application.service;
 
 import com.sisger.demo.company.domain.Company;
-import com.sisger.demo.company.dto.RequestCompanyDTO;
-import com.sisger.demo.company.dto.ResponseCompanyDTO;
-import com.sisger.demo.company.repository.CompanyRepository;
+import com.sisger.demo.company.domain.dto.RequestCompanyDTO;
+import com.sisger.demo.company.domain.dto.ResponseCompanyDTO;
+import com.sisger.demo.company.infra.repository.CompanyRepository;
 import com.sisger.demo.user.domain.User;
-import com.sisger.demo.user.service.UserService;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

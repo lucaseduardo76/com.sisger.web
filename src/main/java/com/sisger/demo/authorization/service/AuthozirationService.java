@@ -1,6 +1,6 @@
 package com.sisger.demo.authorization.service;
 
-import com.sisger.demo.user.repository.UserRepository;
+import com.sisger.demo.user.infra.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

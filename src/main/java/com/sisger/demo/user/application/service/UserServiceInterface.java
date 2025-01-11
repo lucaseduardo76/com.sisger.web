@@ -1,4 +1,4 @@
-package com.sisger.demo.user.service;
+package com.sisger.demo.user.application.service;
 
 import com.sisger.demo.authorization.domain.AuthenticationDTO;
 import com.sisger.demo.exception.UnauthorizedException;

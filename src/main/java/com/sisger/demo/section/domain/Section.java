@@ -1,20 +1,22 @@
-package com.sisger.demo.company.domain;
+package com.sisger.demo.section.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sisger.demo.company.domain.Company;
 import com.sisger.demo.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 @Table(name = "tb_section")
 public class Section {
 

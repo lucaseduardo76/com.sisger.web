@@ -1,12 +1,11 @@
 package com.sisger.demo.company.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sisger.demo.section.domain.Section;
 import com.sisger.demo.user.domain.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -14,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Builder
+@EqualsAndHashCode(callSuper=false)
 @Table(name = "tb_company")
 public class Company {
 

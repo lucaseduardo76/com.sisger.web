@@ -1,4 +1,4 @@
-package com.sisger.demo.user.controller;
+package com.sisger.demo.user.application.controller;
 
 import com.sisger.demo.authorization.domain.AuthenticationDTO;
 import com.sisger.demo.user.domain.dto.RegisterDTO;

@@ -1,9 +1,7 @@
-package com.sisger.demo.user.controller;
+package com.sisger.demo.user.application.controller;
 
 
-import com.sisger.demo.user.domain.User;
 import com.sisger.demo.user.domain.dto.ChangePasswordDTO;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

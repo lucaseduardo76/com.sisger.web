@@ -1,4 +1,4 @@
-package com.sisger.demo.company.repository;
+package com.sisger.demo.company.infra.repository;
 
 import com.sisger.demo.company.domain.Company;
 import org.springframework.data.jpa.repository.JpaRepository;

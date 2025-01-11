@@ -1,4 +1,4 @@
-package com.sisger.demo.user.repository;
+package com.sisger.demo.user.infra.repository;
 
 import com.sisger.demo.user.domain.User;
 import jakarta.validation.constraints.NotNull;

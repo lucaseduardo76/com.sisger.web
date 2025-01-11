@@ -15,9 +15,24 @@ public class AuthorityChecker {
         return false;
     }
 
+    public static boolean hasManagerAuthority(User user) {
+        for (GrantedAuthority authority : user.getAuthorities()) {
+            if ("ROLE_MANAGER".equals(authority.getAuthority())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void requireMainAuthority(User user) {
         if (!hasMainAuthority(user)) {
             throw new UnauthorizedException("Usuário não possui autoridade MAIN.");
+        }
+    }
+
+    public static void requireManagerAuthority(User user) {
+        if (!hasMainAuthority(user)) {
+            throw new UnauthorizedException("Usuário não possui autoridade MANAGER, consulte o administrador.");
         }
     }
 }

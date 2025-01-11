@@ -1,4 +1,4 @@
-package com.sisger.demo.user.controller;
+package com.sisger.demo.user.application.controller;
 
 
 import com.sisger.demo.authorization.domain.AuthenticationDTO;
@@ -7,8 +7,8 @@ import com.sisger.demo.exception.CpfAlreadyExistsException;
 import com.sisger.demo.exception.EmailAlreadyExistsException;
 import com.sisger.demo.user.domain.dto.RegisterDTO;
 import com.sisger.demo.user.domain.User;
-import com.sisger.demo.user.repository.UserRepository;
-import com.sisger.demo.user.service.UserService;
+import com.sisger.demo.user.infra.repository.UserRepository;
+import com.sisger.demo.user.application.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

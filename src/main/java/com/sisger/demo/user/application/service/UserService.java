@@ -1,12 +1,12 @@
-package com.sisger.demo.user.service;
+package com.sisger.demo.user.application.service;
 
 import com.sisger.demo.authorization.domain.AuthenticationDTO;
-import com.sisger.demo.company.service.CompanyService;
+import com.sisger.demo.company.application.service.CompanyService;
 import com.sisger.demo.exception.UnauthorizedException;
 import com.sisger.demo.infra.security.TokenService;
 import com.sisger.demo.user.domain.dto.RegisterDTO;
 import com.sisger.demo.user.domain.User;
-import com.sisger.demo.user.repository.UserRepository;
+import com.sisger.demo.user.infra.repository.UserRepository;
 import com.sisger.demo.util.AuthorityChecker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class UserService {
+public class UserService implements UserServiceInterface {
 
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;

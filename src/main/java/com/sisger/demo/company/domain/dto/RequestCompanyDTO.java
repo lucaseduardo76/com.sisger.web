@@ -1,4 +1,4 @@
-package com.sisger.demo.company.dto;
+package com.sisger.demo.company.domain.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,11 +11,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseCompanyDTO {
+public class RequestCompanyDTO {
 
-    private String id;
+    @NotNull
     private String razaoSocial;
+    @Size(min = 11, max = 50)
     private Integer cnpj;
     private Integer cpf;
+
 
 }

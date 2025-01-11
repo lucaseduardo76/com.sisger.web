@@ -1,13 +1,11 @@
-package com.sisger.demo.user.controller;
+package com.sisger.demo.user.application.controller;
 
 import com.sisger.demo.exception.UnauthorizedException;
 import com.sisger.demo.infra.security.TokenService;
-import com.sisger.demo.user.domain.User;
 import com.sisger.demo.user.domain.dto.ChangePasswordDTO;
-import com.sisger.demo.user.service.UserService;
+import com.sisger.demo.user.application.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

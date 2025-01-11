@@ -1,13 +1,13 @@
-package com.sisger.demo.company.controller;
+package com.sisger.demo.company.application.controller;
 
 
-import com.sisger.demo.company.dto.RequestCompanyDTO;
-import com.sisger.demo.company.dto.ResponseCompanyDTO;
-import com.sisger.demo.company.service.CompanyService;
+import com.sisger.demo.company.domain.dto.RequestCompanyDTO;
+import com.sisger.demo.company.domain.dto.ResponseCompanyDTO;
+import com.sisger.demo.company.application.service.CompanyService;
 import com.sisger.demo.exception.UnauthorizedException;
 import com.sisger.demo.infra.security.TokenService;
 import com.sisger.demo.user.domain.User;
-import com.sisger.demo.user.service.UserService;
+import com.sisger.demo.user.application.service.UserService;
 import com.sisger.demo.util.AuthorityChecker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

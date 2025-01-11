@@ -1,7 +1,7 @@
 package com.sisger.demo.user.domain;
 
 import com.sisger.demo.company.domain.Company;
-import com.sisger.demo.company.domain.Section;
+import com.sisger.demo.section.domain.Section;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,13 +55,7 @@ public class User implements UserDetails {
                 authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
                 authorities.add(new SimpleGrantedAuthority("ROLE_EMPLOYEE"));
                 break;
-            case DIRECTOR:
-                authorities.add(new SimpleGrantedAuthority("ROLE_DIRECTOR"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_EMPLOYEE"));
-                break;
             case MAIN:
-                authorities.add(new SimpleGrantedAuthority("ROLE_DIRECTOR"));
                 authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
                 authorities.add(new SimpleGrantedAuthority("ROLE_EMPLOYEE"));
                 authorities.add(new SimpleGrantedAuthority("ROLE_MAIN"));

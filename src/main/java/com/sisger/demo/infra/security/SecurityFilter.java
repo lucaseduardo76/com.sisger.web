@@ -1,7 +1,6 @@
 package com.sisger.demo.infra.security;
 
-import com.sisger.demo.user.domain.User;
-import com.sisger.demo.user.repository.UserRepository;
+import com.sisger.demo.user.infra.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
