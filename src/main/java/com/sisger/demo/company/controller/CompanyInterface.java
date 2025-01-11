@@ -20,7 +20,7 @@ public interface CompanyInterface {
 
     @PostMapping(value = "/create")
     public ResponseEntity<ResponseCompanyDTO> createCompany(
-            @RequestHeader(name = "Authorization", required = true) String token, @RequestParam String idMainAcc,
+            @RequestHeader(name = "Authorization", required = true) String token,
             @RequestBody RequestCompanyDTO requestCompanyDTO);
 
 }

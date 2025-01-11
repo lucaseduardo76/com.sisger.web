@@ -1,5 +1,6 @@
-package com.sisger.demo.user.domain;
+package com.sisger.demo.user.domain.dto;
 
+import com.sisger.demo.user.domain.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
