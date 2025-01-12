@@ -1,7 +1,6 @@
 package com.sisger.demo.user.application.controller;
 
 import com.sisger.demo.exception.BadRequestException;
-import com.sisger.demo.exception.EmailAlreadyExistsException;
 import com.sisger.demo.exception.InternalServerErrorException;
 import com.sisger.demo.exception.UnauthorizedException;
 import com.sisger.demo.infra.security.TokenService;
@@ -9,13 +8,14 @@ import com.sisger.demo.user.domain.Role;
 import com.sisger.demo.user.domain.User;
 import com.sisger.demo.user.domain.dto.ChangePasswordDTO;
 import com.sisger.demo.user.application.service.UserService;
+import com.sisger.demo.user.domain.dto.RequestDeleteUserDTO;
+import com.sisger.demo.user.domain.dto.RequestUpdateUserDTO;
 import com.sisger.demo.user.domain.dto.RequestUserDTO;
 import com.sisger.demo.util.AuthorityChecker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.catalina.connector.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -68,11 +68,11 @@ public class UserController implements UserControllerInterface{
             throw new BadRequestException(
                     "Autoridade não pode ser MAIN, por favor refaça a solicitação com role MANAGER ou menor");
 
-        var newEmployee = userService.createRegularUser(requestUserDTO);
-        if(user.getCompany() != null)
-            newEmployee.setCompany(user.getCompany());
-        else
+        if(user.getCompany() == null)
             throw new InternalServerErrorException("Erro interno, por favor contate o suporte");
+
+        var newEmployee = userService.createRegularUser(requestUserDTO, user);
+
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -83,6 +83,31 @@ public class UserController implements UserControllerInterface{
 
         return ResponseEntity.created(location).body(newEmployee);
 
+    }
+
+    @Override
+    public ResponseEntity<HttpStatus> update(String token, RequestUpdateUserDTO requestUpdateUser) {
+        log.info("[inicia]  UserController - update");
+        var user = validateToken(token);
+        AuthorityChecker.requireManagerAuthority(user);
+
+        userService.update(requestUpdateUser, user);
+
+        log.info("[fim]  UserController - update");
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+    }
+
+    @Override
+    public ResponseEntity<HttpStatus> delete(String token, RequestDeleteUserDTO requestDeleteUserDTO) {
+        log.info("[inicia]  UserController - delete");
+
+        var user = validateToken(token);
+        AuthorityChecker.requireManagerAuthority(user);
+        userService.delete(requestDeleteUserDTO, user);
+
+        log.info("[fim]  UserController - delete");
+
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     private User validateToken(String token) {

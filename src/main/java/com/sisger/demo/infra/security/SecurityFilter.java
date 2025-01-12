@@ -1,5 +1,7 @@
 package com.sisger.demo.infra.security;
 
+
+import com.sisger.demo.exception.UnauthorizedException;
 import com.sisger.demo.user.infra.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -48,8 +50,9 @@ public class SecurityFilter extends OncePerRequestFilter {
                 );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
-                System.out.println("User not found with email: " + email);
+                System.out.println("Manager not found with email: " + email);
             }
+
 
         }
 

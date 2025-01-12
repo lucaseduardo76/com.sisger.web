@@ -3,7 +3,10 @@ package com.sisger.demo.user.application.controller;
 
 import com.sisger.demo.user.domain.User;
 import com.sisger.demo.user.domain.dto.ChangePasswordDTO;
+import com.sisger.demo.user.domain.dto.RequestDeleteUserDTO;
+import com.sisger.demo.user.domain.dto.RequestUpdateUserDTO;
 import com.sisger.demo.user.domain.dto.RequestUserDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,4 +28,13 @@ public interface UserControllerInterface {
     public ResponseEntity<User> create(
             @RequestHeader(name = "Authorization", required = true) String token,
             @RequestBody RequestUserDTO requestUserDTO);
+
+    @PutMapping(value = "update-user")
+    public ResponseEntity<HttpStatus> update(
+            @RequestHeader(name = "Authorization", required = true) String token,
+            @RequestBody RequestUpdateUserDTO requestUpdateUser);
+
+    @DeleteMapping(value = "delete")
+    public ResponseEntity<HttpStatus> delete(@RequestHeader(name = "Authorization", required = true) String token,
+                                             @RequestBody RequestDeleteUserDTO requestDeleteUserDTO);
 }

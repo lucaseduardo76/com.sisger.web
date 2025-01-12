@@ -6,6 +6,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.sisger.demo.exception.InternalServerErrorException;
+import com.sisger.demo.exception.UnauthorizedException;
 import com.sisger.demo.user.domain.User;
 import com.sisger.demo.user.infra.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +39,7 @@ public class TokenService {
 
             return token;
         }catch (JWTCreationException exception) {
-            throw new RuntimeException("JWT generation failed", exception);
+            throw new InternalServerErrorException("JWT generation failed");
         }
     }
 
@@ -50,9 +52,9 @@ public class TokenService {
                     .verify(token)
                     .getSubject();
         }catch (JWTVerificationException exception){
-            new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Token");
+            throw new UnauthorizedException("Token invalid");
         }
-        return null;
+
     }
 
     private Instant genarateExpirationTime() {
