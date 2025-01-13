@@ -1,19 +1,18 @@
 package com.sisger.demo.section.domain.dto;
 
-import jakarta.validation.constraints.NotNull;
+
+import com.sisger.demo.company.domain.dto.ResponseCompanyChildDTO;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestUpdateSectionDTO {
-    @NotNull
+@Builder
+public class ResponseSectionDTO {
     private String id;
-    @NotNull
     private String name;
-    @NotNull
-    private String passwordAuthorization;
+    private ResponseCompanyChildDTO company;
 }

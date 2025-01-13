@@ -1,6 +1,7 @@
 package com.sisger.demo.company.application.controller;
 
 
+import com.sisger.demo.company.domain.Company;
 import com.sisger.demo.company.domain.dto.RequestCompanyDTO;
 import com.sisger.demo.company.domain.dto.ResponseCompanyDTO;
 import com.sisger.demo.company.application.service.CompanyService;
@@ -24,6 +25,20 @@ import java.net.URI;
 @Log4j2
 public class CompanyController implements CompanyInterface{
 
+    private final CompanyService companyService;
+    private final TokenService tokenService;
+
+    @Override
+    public ResponseEntity<ResponseCompanyDTO> findById(String token, String id) {
+        log.info("[inicia] CompanyController - findById");
+        var user = tokenService.getUserByToken(token);
+
+        var company = companyService.findByIdToRequest(id);
+
+        log.info("[fim] CompanyController - findById");
+
+        return ResponseEntity.ok().body(company);
+    }
 }
 
 

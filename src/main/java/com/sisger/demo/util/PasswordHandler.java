@@ -8,10 +8,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class PasswordHandler {
 
     public static void validatePassword(String passwordReq, String passwordUser, PasswordEncoder passwordEncoder){
-        log.info("[inicia]  UserService - validatePassword");
+        log.info("[inicia]  PasswordHandler - validatePassword");
+        if(passwordReq == null || passwordUser == null || passwordEncoder == null) {
+            throw new UnauthorizedException("Invalid password - null");
+        }
+
         if(!passwordEncoder.matches(passwordReq, passwordUser)) {
             throw new UnauthorizedException("Invalid password");
         }
-        log.info("[fim]  UserService - validatePassword");
+        log.info("[fim]  PasswordHandler - validatePassword");
     }
 }

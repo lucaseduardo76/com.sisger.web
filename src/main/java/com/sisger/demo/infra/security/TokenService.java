@@ -39,7 +39,8 @@ public class TokenService {
 
             return token;
         }catch (JWTCreationException exception) {
-            throw new InternalServerErrorException("JWT generation failed");
+            System.out.println("JWT generation failed");
+            return null;
         }
     }
 
@@ -52,7 +53,8 @@ public class TokenService {
                     .verify(token)
                     .getSubject();
         }catch (JWTVerificationException exception){
-            throw new UnauthorizedException("Token invalid");
+            System.out.println("Invalid JWT token");
+            return null;
         }
 
     }

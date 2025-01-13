@@ -25,6 +25,7 @@ public class Section {
     private String id;
     private String name;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;

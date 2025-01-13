@@ -80,11 +80,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<EmailAlreadyExistsDetails> handleIllegalArgumentException(IllegalArgumentException ex) {
+    public ResponseEntity<IllegalArgumentDetails> handleIllegalArgumentException(IllegalArgumentException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                EmailAlreadyExistsDetails.builder()
+                IllegalArgumentDetails.builder()
                         .title("Bad Request check the documentation")
                         .details(ex.getMessage())
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .developerMessage(ex.getClass().getName())
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<NullPointerDetails> handleNullPointerException(NullPointerException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                NullPointerDetails.builder()
+                        .title("Bad Request check the documentation")
+                        .details("Bad Request, check the documentation")
                         .status(HttpStatus.BAD_REQUEST.value())
                         .developerMessage(ex.getClass().getName())
                         .timestamp(LocalDateTime.now())

@@ -4,6 +4,8 @@ import com.sisger.demo.infra.security.TokenService;
 import com.sisger.demo.section.application.service.SectionService;
 import com.sisger.demo.section.domain.Section;
 import com.sisger.demo.section.domain.dto.RequestSectionDTO;
+import com.sisger.demo.section.domain.dto.RequestUpdateSectionDTO;
+import com.sisger.demo.section.domain.dto.ResponseSectionDTO;
 import com.sisger.demo.section.infra.repository.SectionRepository;
 import com.sisger.demo.util.AuthorityChecker;
 import lombok.AllArgsConstructor;
@@ -27,7 +29,7 @@ public class SectionController implements SectionControllerInterface {
 
 
     @Override
-    public ResponseEntity<List<Section>> findAllSectionsByCompany(String token) {
+    public ResponseEntity<List<ResponseSectionDTO>> findAllSectionsByCompany(String token) {
         log.info("[inicia] SectionController - findAllSectionsByCompany");
 
         var user = tokenService.getUserByToken(token);
@@ -54,6 +56,18 @@ public class SectionController implements SectionControllerInterface {
 
         log.info("[fim] SectionController - createSection");
         return ResponseEntity.created(uri).body(section);
+
+    }
+
+    @Override
+    public ResponseEntity<Section> updateSection(String token, RequestUpdateSectionDTO requestupdateSectionDTO) {
+        log.info("[inicia] SectionController - updateSection");
+
+        var user = tokenService.getUserByToken(token);
+        AuthorityChecker.requireManagerAuthority(user);
+        log.info("[fim] SectionController - updateSection");
+        return ResponseEntity.ok().body(sectionService.update(requestupdateSectionDTO, user));
+
 
     }
 }

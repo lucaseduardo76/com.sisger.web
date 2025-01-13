@@ -91,10 +91,6 @@ public class UserService implements UserServiceInterface {
         usersByCompany.removeIf(user -> Role.MAIN.equals(user.getRole()));
         usersByCompany.sort(Comparator.comparing(user -> user.getName().toLowerCase()));
 
-        for(User user : usersByCompany){
-            System.out.println(user.getCompany().getRazaoSocial());
-        }
-
         log.info("[fim]  UserService - findAllByCompany");
 
         return usersByCompany;

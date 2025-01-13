@@ -20,9 +20,8 @@ public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private String razaoSocial;
+    private String name;
     private Integer cnpj;
-    private Integer cpf;
 
     @JsonIgnore
     @OneToOne
