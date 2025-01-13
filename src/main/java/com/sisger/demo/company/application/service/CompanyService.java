@@ -26,7 +26,7 @@ public class CompanyService implements CompanyServiceInteface{
                 .id(company.getId())
                 .name(company.getName())
                 .cnpj(company.getCnpj())
-                .section(company.getSection())
+                .sections(company.getSection())
                 .build();
     }
 

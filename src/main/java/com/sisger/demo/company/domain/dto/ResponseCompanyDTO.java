@@ -16,5 +16,5 @@ public class ResponseCompanyDTO {
     private String id;
     private String name;
     private Integer cnpj;
-    private List<Section> section;
+    private List<Section> sections;
 }

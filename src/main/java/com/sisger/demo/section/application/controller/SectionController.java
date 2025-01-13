@@ -3,6 +3,7 @@ package com.sisger.demo.section.application.controller;
 import com.sisger.demo.infra.security.TokenService;
 import com.sisger.demo.section.application.service.SectionService;
 import com.sisger.demo.section.domain.Section;
+import com.sisger.demo.section.domain.dto.RequestDeleteSectionDTO;
 import com.sisger.demo.section.domain.dto.RequestSectionDTO;
 import com.sisger.demo.section.domain.dto.RequestUpdateSectionDTO;
 import com.sisger.demo.section.domain.dto.ResponseSectionDTO;
@@ -10,6 +11,7 @@ import com.sisger.demo.section.infra.repository.SectionRepository;
 import com.sisger.demo.util.AuthorityChecker;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -69,5 +71,18 @@ public class SectionController implements SectionControllerInterface {
         return ResponseEntity.ok().body(sectionService.update(requestupdateSectionDTO, user));
 
 
+    }
+
+    @Override
+    public ResponseEntity<HttpStatus> deleteSection(String token, RequestDeleteSectionDTO requestDeleteSectionDTO) {
+        log.info("[inicia] SectionController - deleteSection");
+
+        var user = tokenService.getUserByToken(token);
+        AuthorityChecker.requireManagerAuthority(user);
+        sectionService.delete(requestDeleteSectionDTO, user);
+
+        log.info("[fim] SectionController - deleteSection");
+
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 }

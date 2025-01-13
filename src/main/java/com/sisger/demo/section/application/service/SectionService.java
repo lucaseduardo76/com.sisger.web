@@ -72,7 +72,12 @@ public class SectionService implements SectionServiceInterface{
 
     @Override
     public void delete(RequestDeleteSectionDTO requestDeleteSectionDTO, User manager) {
+        log.info("[inicia] SectionService - delete");
+        PasswordHandler.validatePassword(
+                requestDeleteSectionDTO.getPasswordAuthorization(), manager.getPassword(), passwordEncoder);
 
+        sectionRepository.deleteById(requestDeleteSectionDTO.getId());
+        log.info("[fim] SectionService - delete");
     }
 
     @Override
