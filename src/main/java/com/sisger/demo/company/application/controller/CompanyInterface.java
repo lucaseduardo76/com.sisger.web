@@ -10,16 +10,4 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("company")
 public interface CompanyInterface {
 
-    @GetMapping(value = "/employee")
-    public ResponseEntity<User> findAllEmployeeByCompany(
-            @RequestHeader(name = "Authorization", required = true) String token, String id);
-    @GetMapping(value = "/employee/section")
-    public ResponseEntity<User> findAllEmployeeBySection(
-            @RequestHeader(name = "Authorization", required = true) String token, String id);
-
-    @PostMapping(value = "/create")
-    public ResponseEntity<ResponseCompanyDTO> createCompany(
-            @RequestHeader(name = "Authorization", required = true) String token,
-            @RequestBody RequestCompanyDTO requestCompanyDTO);
-
 }

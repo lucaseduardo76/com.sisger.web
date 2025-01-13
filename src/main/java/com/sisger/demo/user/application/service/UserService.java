@@ -15,6 +15,7 @@ import com.sisger.demo.user.domain.dto.RequestDeleteUserDTO;
 import com.sisger.demo.user.domain.dto.RequestUpdateUserDTO;
 import com.sisger.demo.user.domain.dto.RequestUserDTO;
 import com.sisger.demo.user.infra.repository.UserRepository;
+import com.sisger.demo.util.PasswordHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -169,18 +170,13 @@ public class UserService implements UserServiceInterface {
         log.info("[fim]  UserService - delete");
     }
 
+    private void validatePassword(String requestPassword, String managerPassword){
+        PasswordHandler.validatePassword(requestPassword, managerPassword, passwordEncoder);
+    }
+
     private void validateCompany(User manager, User employee){
         if(!manager.getCompany().equals(employee.getCompany()))
             throw new UnauthorizedException("This user is from a different company");
-    }
-
-
-    private void validatePassword(String passwordReq, String passwordUser){
-        log.info("[inicia]  UserService - validatePassword");
-        if(!passwordEncoder.matches(passwordReq, passwordUser)) {
-            throw new UnauthorizedException("Invalid password");
-        }
-        log.info("[fim]  UserService - validatePassword");
     }
 
     private void validateEmail(String email){

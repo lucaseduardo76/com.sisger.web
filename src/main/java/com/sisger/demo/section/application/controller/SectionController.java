@@ -25,6 +25,7 @@ public class SectionController implements SectionControllerInterface {
     private final SectionService sectionService;
     private final TokenService tokenService;
 
+
     @Override
     public ResponseEntity<List<Section>> findAllSectionsByCompany(String token) {
         log.info("[inicia] SectionController - findAllSectionsByCompany");
@@ -43,7 +44,7 @@ public class SectionController implements SectionControllerInterface {
         var user = tokenService.getUserByToken(token);
         AuthorityChecker.requireManagerAuthority(user);
 
-        Section section = sectionService.create(requestSectionDTO);
+        Section section = sectionService.create(requestSectionDTO, user);
 
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")

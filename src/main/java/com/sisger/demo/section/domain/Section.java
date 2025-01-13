@@ -23,6 +23,7 @@ public class Section {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    private String name;
 
     @ManyToOne
     @JoinColumn(name = "company_id")

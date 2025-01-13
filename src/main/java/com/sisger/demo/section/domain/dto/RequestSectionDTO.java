@@ -13,4 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RequestSectionDTO {
     private String companyId;
+    private String name;
+    private String passwordAuthorization;
+
 }

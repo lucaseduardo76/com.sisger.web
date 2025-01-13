@@ -24,6 +24,9 @@ public interface UserControllerInterface {
     @GetMapping(value = "find-all")
     public ResponseEntity<List<User>> findAll(@RequestHeader(name = "Authorization", required = true) String token);
 
+    @GetMapping(value = "find-user-logged")
+    public ResponseEntity<User> findUserLogged(@RequestHeader(name = "Authorization", required = true) String token);
+
     @PostMapping(value = "new-user")
     public ResponseEntity<User> create(
             @RequestHeader(name = "Authorization", required = true) String token,
