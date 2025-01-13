@@ -93,7 +93,6 @@ public class SectionService implements SectionServiceInterface{
                     .name(requestUpdateSectionDTO.getName())
                     .id(sectionToUpdate.getId())
                     .company(sectionToUpdate.getCompany())
-                    .employees(sectionToUpdate.getEmployees())
                     .build();
 
             log.info("[fim] SectionService - update");

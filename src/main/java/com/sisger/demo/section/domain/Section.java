@@ -30,9 +30,7 @@ public class Section {
     @JoinColumn(name = "company_id")
     private Company company;
 
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> employees;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<User> tasks;
 
 }

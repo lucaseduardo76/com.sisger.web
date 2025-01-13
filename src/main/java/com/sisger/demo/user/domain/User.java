@@ -1,5 +1,6 @@
 package com.sisger.demo.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sisger.demo.company.domain.Company;
 import com.sisger.demo.section.domain.Section;
 import jakarta.persistence.*;
@@ -39,9 +40,8 @@ public class User implements UserDetails {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @ManyToOne
-    @JoinColumn(name = "section_id")
-    private Section section;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<User> tasks;
 
 
     @Override
