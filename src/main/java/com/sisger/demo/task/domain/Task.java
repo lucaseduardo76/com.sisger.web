@@ -32,7 +32,7 @@ public class Task {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User employee;
+    private User user;
 
     @JsonIgnore
     @ManyToOne

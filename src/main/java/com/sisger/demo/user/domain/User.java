@@ -40,7 +40,7 @@ public class User implements UserDetails {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks;
 
 

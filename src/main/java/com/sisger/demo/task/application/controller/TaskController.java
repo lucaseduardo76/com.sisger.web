@@ -34,18 +34,18 @@ public class TaskController implements TaskControllerInterface {
         var user = tokenService.getUserByToken(token);
         AuthorityChecker.requireManagerAuthority(user);
 
-        var taskList = taskService.findAllTasksBySection(sectionId);
-
         log.info("[fim] TaskController - findAllTasksBySection");
-        return ResponseEntity.ok().body(taskList);
+        return ResponseEntity.ok().body(taskService.findAllTasksBySection(sectionId));
     }
 
     @Override
     public ResponseEntity<List<ResponseTaskDTO>> findAllTasksByUser(String token, String userId) {
         log.info("[inicia] TaskController - findAllTasksByUser");
+        var user = tokenService.getUserByToken(token);
+        AuthorityChecker.requireManagerAuthority(user);
 
         log.info("[fim] TaskController - findAllTasksByUser");
-        return null;
+        return ResponseEntity.ok().body(taskService.findAllTasksByUser(userId));
     }
 
     @Override

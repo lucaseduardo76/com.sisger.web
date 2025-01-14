@@ -32,10 +32,12 @@ public class TaskService implements TaskServiceInterface{
     @Override
     public List<ResponseTaskDTO> findAllTasksBySection(String sectionId) {
         log.info("[inicia] TaskService - findAllTasksBySection");
-        if(sectionService.findById(sectionId) == null)
+        List<Task> taskList = taskRepository.findAllBySectionId(sectionId);
+
+        if(taskRepository.findAllBySectionId(sectionId) == null)
             throw new NotFoundException("Section not found");
 
-        List<ResponseTaskDTO> tasks = taskRepository.findAllBySectionId(sectionId).stream()
+        List<ResponseTaskDTO> responseTaskList = taskList.stream()
                 .map(task -> ResponseTaskDTO.builder()
                         .id(task.getId())
                         .title(task.getTitle())
@@ -44,17 +46,36 @@ public class TaskService implements TaskServiceInterface{
                         .finalDate(handleFormatdDate(task.getFinalDate()))
                         .employeeMessage(task.getEmployeeMessage())
                         .status(task.getStatus())
-                        .employee(convertUserToResponseUserToTaskDTO(task.getEmployee()))
+                        .employee(convertUserToResponseUserToTaskDTO(task.getUser()))
                         .build())
                 .toList();
         log.info("[fim] TaskService - findAllTasksBySection");
 
-        return tasks;
+        return responseTaskList;
     }
 
     @Override
     public List<ResponseTaskDTO> findAllTasksByUser(String userId) {
-        return List.of();
+        log.info("[inicia] TaskService - findAllTasksByUser");
+        List<Task> taskList = taskRepository.findAllByUserId(userId);
+        if(taskRepository.findAllByUserId(userId) == null)
+            throw new NotFoundException("Tasks not found, verify the user Id");
+
+        List<ResponseTaskDTO> responseTaskList = taskList.stream()
+                .map(task -> ResponseTaskDTO.builder()
+                        .id(task.getId())
+                        .title(task.getTitle())
+                        .description(task.getDescription())
+                        .initialDate(handleFormatdDate(task.getInitialDate()))
+                        .finalDate(handleFormatdDate(task.getFinalDate()))
+                        .employeeMessage(task.getEmployeeMessage())
+                        .status(task.getStatus())
+                        .employee(convertUserToResponseUserToTaskDTO(task.getUser()))
+                        .build())
+                .toList();
+
+        log.info("[fim] TaskService - findAllTasksByUser");
+        return responseTaskList;
     }
 
     @Override
@@ -69,7 +90,7 @@ public class TaskService implements TaskServiceInterface{
                 .finalDate(requestTaskDTOTask.getFinalDate())
                 .status(StatusRole.NOT_INITIALIZED)
                 .section(sectionService.findById(requestTaskDTOTask.getSectionId()))
-                .employee(employee)
+                .user(employee)
                 .build());
         log.info("[fim] TaskService - save");
 
@@ -126,7 +147,7 @@ public class TaskService implements TaskServiceInterface{
                 .finalDate(handleFormatdDate(task.getFinalDate()))
                 .employeeMessage(task.getEmployeeMessage())
                 .status(task.getStatus())
-                .employee(convertUserToResponseUserToTaskDTO(task.getEmployee()))
+                .employee(convertUserToResponseUserToTaskDTO(task.getUser()))
                 .build();
 
     }
