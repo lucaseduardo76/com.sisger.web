@@ -2,6 +2,7 @@ package com.sisger.demo.user.domain.dto;
 
 import com.sisger.demo.company.domain.dto.ResponseCompanyChildDTO;
 import com.sisger.demo.task.domain.dto.ResponseTaskDTO;
+import com.sisger.demo.task.domain.dto.ResponseTaskFindByUserDTO;
 import com.sisger.demo.user.domain.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,5 +22,5 @@ public class ResponseUserDTO {
     private String cpf;
     private Role role;
     private ResponseCompanyChildDTO company;
-    private List<ResponseTaskDTO> task;
+    private List<ResponseTaskFindByUserDTO> task;
 }

@@ -1,14 +1,18 @@
 package com.sisger.demo.task.application.service;
 
 
+import com.sisger.demo.company.domain.dto.ResponseCompanyChildDTO;
 import com.sisger.demo.exception.BadRequestException;
 import com.sisger.demo.exception.NotFoundException;
 import com.sisger.demo.section.application.service.SectionService;
+import com.sisger.demo.section.domain.Section;
+import com.sisger.demo.section.domain.dto.ResponseSectionDTO;
 import com.sisger.demo.task.domain.StatusRole;
 import com.sisger.demo.task.domain.Task;
 import com.sisger.demo.task.domain.dto.RequestChangeStatusTaskDTO;
 import com.sisger.demo.task.domain.dto.RequestTaskDTO;
 import com.sisger.demo.task.domain.dto.ResponseTaskDTO;
+import com.sisger.demo.task.domain.dto.ResponseTaskFindByUserDTO;
 import com.sisger.demo.task.infra.repository.TaskRepository;
 import com.sisger.demo.user.domain.User;
 import com.sisger.demo.user.domain.dto.ResponseUserToTaskDTO;
@@ -55,14 +59,14 @@ public class TaskService implements TaskServiceInterface{
     }
 
     @Override
-    public List<ResponseTaskDTO> findAllTasksByUser(String userId) {
+    public List<ResponseTaskFindByUserDTO> findAllTasksByUser(String userId) {
         log.info("[inicia] TaskService - findAllTasksByUser");
         List<Task> taskList = taskRepository.findAllByUserId(userId);
         if(taskRepository.findAllByUserId(userId) == null)
             throw new NotFoundException("Tasks not found, verify the user Id");
 
-        List<ResponseTaskDTO> responseTaskList = taskList.stream()
-                .map(task -> ResponseTaskDTO.builder()
+        List<ResponseTaskFindByUserDTO> responseTaskList = taskList.stream()
+                .map(task -> ResponseTaskFindByUserDTO.builder()
                         .id(task.getId())
                         .title(task.getTitle())
                         .description(task.getDescription())
@@ -70,7 +74,7 @@ public class TaskService implements TaskServiceInterface{
                         .finalDate(handleFormatdDate(task.getFinalDate()))
                         .employeeMessage(task.getEmployeeMessage())
                         .status(task.getStatus())
-                        .employee(convertUserToResponseUserToTaskDTO(task.getUser()))
+                        .section(convertSectionToResponseDTO(task.getSection()))
                         .build())
                 .toList();
 
@@ -136,6 +140,20 @@ public class TaskService implements TaskServiceInterface{
 
         log.info("[fim] TaskService - convertUserToResponseUserToTaskDTO");
         return responseUserToTaskDTO;
+    }
+
+    private ResponseSectionDTO convertSectionToResponseDTO(Section section){
+        log.info("[inicia] TaskService - convertSectionToResponseDTO");
+        ResponseCompanyChildDTO responseCompanyChildDTO = ResponseCompanyChildDTO.builder()
+                .id(section.getCompany().getId())
+                .name(section.getCompany().getName())
+                .build();
+        log.info("[fim] TaskService - convertSectionToResponseDTO");
+        return ResponseSectionDTO.builder()
+                .id(section.getId())
+                .name(section.getName())
+                .company(responseCompanyChildDTO)
+                .build();
     }
     private ResponseTaskDTO buildTaskResponse(Task task){
 

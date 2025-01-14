@@ -4,6 +4,7 @@ package com.sisger.demo.task.application.controller;
 import com.sisger.demo.task.domain.dto.RequestChangeStatusTaskDTO;
 import com.sisger.demo.task.domain.dto.RequestTaskDTO;
 import com.sisger.demo.task.domain.dto.ResponseTaskDTO;
+import com.sisger.demo.task.domain.dto.ResponseTaskFindByUserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public interface TaskControllerInterface {
             @RequestHeader(name = "Authorization", required = true) String token, @PathVariable String sectionId);
 
     @GetMapping("/find-by-user/{userId}")
-    ResponseEntity<List<ResponseTaskDTO>> findAllTasksByUser(
+    ResponseEntity<List<ResponseTaskFindByUserDTO>> findAllTasksByUser(
             @RequestHeader(name = "Authorization", required = true) String token, @PathVariable String userId);
 
     @PostMapping("/create")

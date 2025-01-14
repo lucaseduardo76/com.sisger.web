@@ -4,6 +4,7 @@ import com.sisger.demo.task.domain.Task;
 import com.sisger.demo.task.domain.dto.RequestChangeStatusTaskDTO;
 import com.sisger.demo.task.domain.dto.RequestTaskDTO;
 import com.sisger.demo.task.domain.dto.ResponseTaskDTO;
+import com.sisger.demo.task.domain.dto.ResponseTaskFindByUserDTO;
 import com.sisger.demo.user.domain.User;
 
 
@@ -14,7 +15,7 @@ public interface TaskServiceInterface {
 
     List<ResponseTaskDTO> findAllTasksBySection(String sectionId);
 
-    List<ResponseTaskDTO> findAllTasksByUser(String sectionId);
+    List<ResponseTaskFindByUserDTO> findAllTasksByUser(String sectionId);
 
     ResponseTaskDTO save(RequestTaskDTO requestTaskDTOTask, User employee);
 

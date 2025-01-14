@@ -5,6 +5,7 @@ import com.sisger.demo.task.application.service.TaskService;
 import com.sisger.demo.task.domain.dto.RequestChangeStatusTaskDTO;
 import com.sisger.demo.task.domain.dto.RequestTaskDTO;
 import com.sisger.demo.task.domain.dto.ResponseTaskDTO;
+import com.sisger.demo.task.domain.dto.ResponseTaskFindByUserDTO;
 import com.sisger.demo.user.application.service.UserService;
 import com.sisger.demo.util.AuthorityChecker;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class TaskController implements TaskControllerInterface {
     }
 
     @Override
-    public ResponseEntity<List<ResponseTaskDTO>> findAllTasksByUser(String token, String userId) {
+    public ResponseEntity<List<ResponseTaskFindByUserDTO>> findAllTasksByUser(String token, String userId) {
         log.info("[inicia] TaskController - findAllTasksByUser");
         var user = tokenService.getUserByToken(token);
         AuthorityChecker.requireManagerAuthority(user);
