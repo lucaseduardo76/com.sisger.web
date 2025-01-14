@@ -4,6 +4,7 @@ import com.sisger.demo.company.domain.Company;
 import com.sisger.demo.company.domain.dto.RequestCompanyDTO;
 import com.sisger.demo.company.domain.dto.ResponseCompanyDTO;
 import com.sisger.demo.company.infra.repository.CompanyRepository;
+import com.sisger.demo.exception.NotFoundException;
 import com.sisger.demo.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -31,14 +32,15 @@ public class CompanyService implements CompanyServiceInteface{
     }
 
     public Company findById(String id) {
-        return companyRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return companyRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Company not found, verify the id"));
     }
 
     public ResponseCompanyDTO save(RequestCompanyDTO requestcompanyDTO, User user) {
         log.info("[inicia] CompanyService - save");
 
         Company company = Company.builder()
-                .name(requestcompanyDTO.getRazaoSocial())
+                .name(requestcompanyDTO.getName())
                 .cnpj(requestcompanyDTO.getCnpj())
                 .mainAccount(user)
                 .build();

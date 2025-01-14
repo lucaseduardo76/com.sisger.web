@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("company")
 public interface CompanyInterface {
 
-    @GetMapping("/{id}")
+    @GetMapping
     public ResponseEntity<ResponseCompanyDTO> findById(
-            @RequestHeader(name = "Authorization", required = true) String token, @PathVariable String id);
+            @RequestHeader(name = "Authorization", required = true) String token);
 }

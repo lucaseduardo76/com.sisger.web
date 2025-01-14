@@ -3,6 +3,7 @@ package com.sisger.demo.section.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sisger.demo.company.domain.Company;
+import com.sisger.demo.task.domain.Task;
 import com.sisger.demo.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,7 @@ public class Section {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> tasks;
+    @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> tasks;
 
 }

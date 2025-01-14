@@ -6,11 +6,8 @@ import com.sisger.demo.exception.UnauthorizedException;
 import com.sisger.demo.infra.security.TokenService;
 import com.sisger.demo.user.domain.Role;
 import com.sisger.demo.user.domain.User;
-import com.sisger.demo.user.domain.dto.ChangePasswordDTO;
+import com.sisger.demo.user.domain.dto.*;
 import com.sisger.demo.user.application.service.UserService;
-import com.sisger.demo.user.domain.dto.RequestDeleteUserDTO;
-import com.sisger.demo.user.domain.dto.RequestUpdateUserDTO;
-import com.sisger.demo.user.domain.dto.RequestUserDTO;
 import com.sisger.demo.util.AuthorityChecker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -45,12 +42,12 @@ public class UserController implements UserControllerInterface{
     }
 
     @Override
-    public ResponseEntity<List<User>> findAll(String token) {
+    public ResponseEntity<List<ResponseUserDTO>> findAll(String token) {
         log.info("[inicia]  UserController - findAll");
 
         var user = validateToken(token);
         AuthorityChecker.requireManagerAuthority(user);
-        List<User> userList = userService.findAllByCompany(user.getCompany());
+        List<ResponseUserDTO> userList = userService.findAllByCompany(user.getCompany());
 
         log.info("[fim]  UserController - findAll");
 
@@ -58,15 +55,16 @@ public class UserController implements UserControllerInterface{
     }
 
     @Override
-    public ResponseEntity<User> findUserLogged(String token) {
+    public ResponseEntity<ResponseUserDTO> findUserLogged(String token) {
         log.info("[inicia]  UserController - findUserLogged");
         var user = validateToken(token);
+        ResponseUserDTO responseUserDTO = userService.buildUserResponse(user);
         log.info("[fim]  UserController - findUserLogged");
-        return ResponseEntity.ok().body(user);
+        return ResponseEntity.ok().body(responseUserDTO);
     }
 
     @Override
-    public ResponseEntity<User> create(String token, RequestUserDTO requestUserDTO) {
+    public ResponseEntity<ResponseUserDTO> create(String token, RequestUserDTO requestUserDTO) {
         log.info("[inicia]  UserController - create");
         var user = validateToken(token);
 

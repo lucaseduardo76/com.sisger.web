@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class RequestCompanyDTO {
 
     @NotNull
-    private String razaoSocial;
+    private String name;
     @Size(min = 11, max = 50)
     private Integer cnpj;
 

@@ -1,7 +1,6 @@
 package com.sisger.demo.task.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sisger.demo.company.domain.Company;
 import com.sisger.demo.section.domain.Section;
 import com.sisger.demo.user.domain.User;
 import jakarta.persistence.*;
@@ -27,12 +26,13 @@ public class Task {
     private LocalDate initialDate;
     private LocalDate finalDate;
     private String employeeMessage;
-    private String status;
+
+    private StatusRole status;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private User employee;
 
     @JsonIgnore
     @ManyToOne

@@ -3,17 +3,14 @@ package com.sisger.demo.user.application.service;
 import com.sisger.demo.authorization.domain.AuthenticationDTO;
 import com.sisger.demo.company.application.service.CompanyService;
 import com.sisger.demo.company.domain.Company;
-import com.sisger.demo.exception.BadRequestException;
-import com.sisger.demo.exception.CpfAlreadyExistsException;
-import com.sisger.demo.exception.EmailAlreadyExistsException;
-import com.sisger.demo.exception.UnauthorizedException;
+import com.sisger.demo.company.domain.dto.ResponseCompanyChildDTO;
+import com.sisger.demo.company.domain.dto.ResponseCompanyDTO;
+import com.sisger.demo.exception.*;
 import com.sisger.demo.infra.security.TokenService;
+import com.sisger.demo.task.application.service.TaskService;
 import com.sisger.demo.user.domain.Role;
-import com.sisger.demo.user.domain.dto.RegisterDTO;
+import com.sisger.demo.user.domain.dto.*;
 import com.sisger.demo.user.domain.User;
-import com.sisger.demo.user.domain.dto.RequestDeleteUserDTO;
-import com.sisger.demo.user.domain.dto.RequestUpdateUserDTO;
-import com.sisger.demo.user.domain.dto.RequestUserDTO;
 import com.sisger.demo.user.infra.repository.UserRepository;
 import com.sisger.demo.util.PasswordHandler;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +20,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -37,21 +36,28 @@ public class UserService implements UserServiceInterface {
     private final TokenService tokenService;
     private final CompanyService companyService;
     private final PasswordEncoder passwordEncoder;
+    private final TaskService taskService;
 
-    public User create(RegisterDTO data){
+    @Transactional
+    public ResponseUserDTO createMainAccount(RegisterDTO data){
         log.info("[inicia]  UserService - create");
         validateEmail(data.getEmail());
         String encryptedPassword = passwordEncoder.encode(data.getPassword());
 
-        User newUser = User.builder()
+        User newUser =  userRepository.save(User.builder()
                 .email(data.getEmail())
                 .name(data.getName())
                 .role(Role.MAIN)
                 .password(encryptedPassword)
-                .build();
+                .build());
 
+
+
+        var companyResponse = companyService.save(data.getCompany(), newUser);
+        this.setCompanyToMain(newUser, companyResponse.getId());
         log.info("[fim]  UserService - create");
-         return userRepository.save(newUser);
+
+         return buildUserResponse(newUser);
     }
 
     public String login(AuthenticationDTO data){
@@ -64,7 +70,9 @@ public class UserService implements UserServiceInterface {
     }
 
     public User findById(String id){
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("User not found, verify the id")
+        );
     }
 
     public void setCompanyToMain(User user, String companyId){
@@ -83,11 +91,14 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public List<User> findAllByCompany(Company company) {
+    public List<ResponseUserDTO> findAllByCompany(Company company) {
         log.info("[inicia]  UserService - findAllByCompany");
         if(company == null) throw new BadRequestException("Company is null");
 
-        List<User> usersByCompany = userRepository.findAllByCompany(company);
+        List<ResponseUserDTO> usersByCompany = new ArrayList<>(userRepository.findAllByCompany(company).stream()
+                .map(this::buildUserResponse)
+                .toList());
+
         usersByCompany.removeIf(user -> Role.MAIN.equals(user.getRole()));
         usersByCompany.sort(Comparator.comparing(user -> user.getName().toLowerCase()));
 
@@ -97,7 +108,7 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public User createRegularUser(RequestUserDTO requestUserDTO, User user) {
+    public ResponseUserDTO createRegularUser(RequestUserDTO requestUserDTO, User manager) {
         log.info("[inicia]  UserService - createRegularUser");
 
         validateEmail(requestUserDTO.getEmail());
@@ -109,11 +120,13 @@ public class UserService implements UserServiceInterface {
                 .password(passwordEncoder.encode(requestUserDTO.getPassword()))
                 .cpf(requestUserDTO.getCpf())
                 .role(requestUserDTO.getRole())
-                .company(user.getCompany())
+                .company(manager.getCompany())
                 .build();
+
+
         log.info("[fim]  UserService - createRegularUser");
 
-        return userRepository.save(newUser);
+        return buildUserResponse(userRepository.save(newUser));
     }
 
     @Override
@@ -166,6 +179,23 @@ public class UserService implements UserServiceInterface {
         log.info("[fim]  UserService - delete");
     }
 
+    @Override
+    public ResponseUserDTO buildUserResponse(User user) {
+        log.info("[inicia]  UserService - buildUserRequest");
+        ResponseUserDTO usersByCompany =ResponseUserDTO.builder()
+                        .id(user.getId())
+                        .name(user.getName())
+                        .email(user.getEmail())
+                        .cpf(user.getCpf())
+                        .role(user.getRole())
+                        .company(buildResponseCompany(companyService.findByIdToRequest(user.getCompany().getId())))
+                        .task(taskService.findAllTasksByUser(user.getId()))
+                        .build();
+        log.info("[fim]  UserService - buildUserRequest");
+
+        return usersByCompany;
+    }
+
     private void validatePassword(String requestPassword, String managerPassword){
         PasswordHandler.validatePassword(requestPassword, managerPassword, passwordEncoder);
     }
@@ -187,6 +217,13 @@ public class UserService implements UserServiceInterface {
         if(this.userRepository.findByCpf(cpf) != null)
             throw new CpfAlreadyExistsException("Cpf "+ cpf +" já existe na base de dados");
         log.info("[fim]  UserService - validateCpf");
+    }
+
+    private ResponseCompanyChildDTO buildResponseCompany(ResponseCompanyDTO companyResponse){
+        return ResponseCompanyChildDTO.builder()
+                .id(companyResponse.getId())
+                .name(companyResponse.getName())
+                .build();
     }
 
 }

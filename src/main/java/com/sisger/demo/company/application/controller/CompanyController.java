@@ -29,11 +29,11 @@ public class CompanyController implements CompanyInterface{
     private final TokenService tokenService;
 
     @Override
-    public ResponseEntity<ResponseCompanyDTO> findById(String token, String id) {
+    public ResponseEntity<ResponseCompanyDTO> findById(String token) {
         log.info("[inicia] CompanyController - findById");
         var user = tokenService.getUserByToken(token);
 
-        var company = companyService.findByIdToRequest(id);
+        var company = companyService.findByIdToRequest(user.getCompany().getId());
 
         log.info("[fim] CompanyController - findById");
 

@@ -3,6 +3,7 @@ package com.sisger.demo.user.application.controller;
 import com.sisger.demo.authorization.domain.AuthenticationDTO;
 import com.sisger.demo.user.domain.dto.RegisterDTO;
 import com.sisger.demo.user.domain.User;
+import com.sisger.demo.user.domain.dto.ResponseUserDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,6 @@ public interface AuthenticationInterface {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<User> register(@RequestBody @Valid RegisterDTO data);
+    public ResponseEntity<ResponseUserDTO> register(@RequestBody @Valid RegisterDTO data);
 
 }

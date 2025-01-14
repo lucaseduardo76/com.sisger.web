@@ -105,5 +105,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<NotFoundDetails> handleNotFoundException(NotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                NotFoundDetails.builder()
+                        .title("Content not found, verify the id")
+                        .details(ex.getMessage())
+                        .status(HttpStatus.NOT_FOUND.value())
+                        .developerMessage(ex.getClass().getName())
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
+
 
 }

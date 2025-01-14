@@ -2,10 +2,7 @@ package com.sisger.demo.user.application.controller;
 
 
 import com.sisger.demo.user.domain.User;
-import com.sisger.demo.user.domain.dto.ChangePasswordDTO;
-import com.sisger.demo.user.domain.dto.RequestDeleteUserDTO;
-import com.sisger.demo.user.domain.dto.RequestUpdateUserDTO;
-import com.sisger.demo.user.domain.dto.RequestUserDTO;
+import com.sisger.demo.user.domain.dto.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +19,13 @@ public interface UserControllerInterface {
 
 
     @GetMapping(value = "find-all")
-    public ResponseEntity<List<User>> findAll(@RequestHeader(name = "Authorization", required = true) String token);
+    public ResponseEntity<List<ResponseUserDTO>> findAll(@RequestHeader(name = "Authorization", required = true) String token);
 
     @GetMapping(value = "find-user-logged")
-    public ResponseEntity<User> findUserLogged(@RequestHeader(name = "Authorization", required = true) String token);
+    public ResponseEntity<ResponseUserDTO> findUserLogged(@RequestHeader(name = "Authorization", required = true) String token);
 
     @PostMapping(value = "new-user")
-    public ResponseEntity<User> create(
+    public ResponseEntity<ResponseUserDTO> create(
             @RequestHeader(name = "Authorization", required = true) String token,
             @RequestBody RequestUserDTO requestUserDTO);
 

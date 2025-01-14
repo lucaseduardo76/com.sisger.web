@@ -1,6 +1,7 @@
 package com.sisger.demo.infra.security;
 
 
+import com.sisger.demo.user.domain.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,8 +1,7 @@
 package com.sisger.demo.user.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sisger.demo.company.domain.Company;
-import com.sisger.demo.section.domain.Section;
+import com.sisger.demo.task.domain.Task;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,14 +33,15 @@ public class User implements UserDetails {
     private String password;
     @Column(unique = true, nullable = true)
     private String cpf;
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> tasks;
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> tasks;
 
 
     @Override
