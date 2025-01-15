@@ -40,7 +40,7 @@ public class UserService implements UserServiceInterface {
 
     @Transactional
     public ResponseUserDTO createMainAccount(RegisterDTO data){
-        log.info("[inicia]  UserService - create");
+        log.info("[inicia]  UserService - createMainAccount");
         validateEmail(data.getEmail());
         String encryptedPassword = passwordEncoder.encode(data.getPassword());
 
@@ -55,7 +55,7 @@ public class UserService implements UserServiceInterface {
 
         var companyResponse = companyService.save(data.getCompany(), newUser);
         this.setCompanyToMain(newUser, companyResponse.getId());
-        log.info("[fim]  UserService - create");
+        log.info("[fim]  UserService - createMainAccount");
 
          return buildUserResponse(newUser);
     }
@@ -152,27 +152,21 @@ public class UserService implements UserServiceInterface {
         if(requestUpdateUser.getRole().equals(Role.MAIN))
             throw new UnauthorizedException("You can't turn this user to MAIN, check the documentation");
 
-        var userUpdated = User.builder()
-                .email(requestUpdateUser.getEmail())
-                .cpf(requestUpdateUser.getCpf())
-                .role(requestUpdateUser.getRole())
-                .name(requestUpdateUser.getName())
-                .company(userToUpdate.getCompany())
-                .id(userToUpdate.getId())
-                .password(userToUpdate.getPassword())
-                .build();
-
-        userRepository.save(userUpdated);
+        buildUpdatedUser(userToUpdate, requestUpdateUser);
+        userRepository.save(userToUpdate);
         log.info("[fim]  UserService - update");
     }
 
     @Override
+    @Transactional
     public void delete(RequestDeleteUserDTO requestDeleteUserDTO, User manager) {
         log.info("[inicia]  UserService - delete");
         var userToDelete = userRepository.findById(requestDeleteUserDTO.getId()).orElseThrow(
                 () -> new BadRequestException("User not found, verify the id"));
 
         validateCompany(manager, userToDelete);
+
+        taskService.deleteAllFromUser(userToDelete, manager);
 
         validatePassword(requestDeleteUserDTO.getPasswordAuthorization(), manager.getPassword());
         userRepository.deleteById(requestDeleteUserDTO.getId());
@@ -188,8 +182,8 @@ public class UserService implements UserServiceInterface {
                         .email(user.getEmail())
                         .cpf(user.getCpf())
                         .role(user.getRole())
-                        .company(buildResponseCompany(companyService.findByIdToRequest(user.getCompany().getId())))
-                        .task(taskService.findAllTasksByUser(user.getId()))
+                        .company(companyService.findByIdToRequest(user.getCompany().getId()))
+                        .task(taskService.findAllTasksByUser(user.getId(), user))
                         .build();
         log.info("[fim]  UserService - buildUserRequest");
 
@@ -219,11 +213,13 @@ public class UserService implements UserServiceInterface {
         log.info("[fim]  UserService - validateCpf");
     }
 
-    private ResponseCompanyChildDTO buildResponseCompany(ResponseCompanyDTO companyResponse){
-        return ResponseCompanyChildDTO.builder()
-                .id(companyResponse.getId())
-                .name(companyResponse.getName())
-                .build();
+    private void buildUpdatedUser(User userToUpdate, RequestUpdateUserDTO requestUpdateUser){
+
+        userToUpdate.setEmail(requestUpdateUser.getEmail());
+        userToUpdate.setCpf(requestUpdateUser.getCpf());
+        userToUpdate.setRole(requestUpdateUser.getRole());
+        userToUpdate.setName(requestUpdateUser.getName());
+
     }
 
 }

@@ -14,7 +14,7 @@ import java.util.List;
 public interface UserControllerInterface {
 
     @PutMapping(value = "change-password")
-    public void changePassword(@RequestHeader(name = "Authorization", required = true) String token,
+    public ResponseEntity<HttpStatus>  changePassword(@RequestHeader(name = "Authorization", required = true) String token,
                                @RequestBody ChangePasswordDTO changePasswordDTO);
 
 
@@ -30,11 +30,11 @@ public interface UserControllerInterface {
             @RequestBody RequestUserDTO requestUserDTO);
 
     @PutMapping(value = "update-user")
-    public ResponseEntity<HttpStatus> update(
+    public ResponseEntity<HttpStatus>  update(
             @RequestHeader(name = "Authorization", required = true) String token,
             @RequestBody RequestUpdateUserDTO requestUpdateUser);
 
     @DeleteMapping(value = "delete")
-    public ResponseEntity<HttpStatus> delete(@RequestHeader(name = "Authorization", required = true) String token,
+    public ResponseEntity<HttpStatus>  delete(@RequestHeader(name = "Authorization", required = true) String token,
                                              @RequestBody RequestDeleteUserDTO requestDeleteUserDTO);
 }

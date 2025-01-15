@@ -3,12 +3,15 @@ package com.sisger.demo.section.application.service;
 import com.sisger.demo.company.application.service.CompanyService;
 import com.sisger.demo.company.domain.dto.ResponseCompanyChildDTO;
 import com.sisger.demo.exception.BadRequestException;
+import com.sisger.demo.exception.UnauthorizedException;
 import com.sisger.demo.section.domain.Section;
 import com.sisger.demo.section.domain.dto.RequestDeleteSectionDTO;
 import com.sisger.demo.section.domain.dto.RequestSectionDTO;
 import com.sisger.demo.section.domain.dto.RequestUpdateSectionDTO;
 import com.sisger.demo.section.domain.dto.ResponseSectionDTO;
 import com.sisger.demo.section.infra.repository.SectionRepository;
+import com.sisger.demo.task.application.service.TaskService;
+import com.sisger.demo.task.infra.repository.TaskRepository;
 import com.sisger.demo.user.domain.User;
 import com.sisger.demo.util.AuthorityChecker;
 import com.sisger.demo.util.PasswordHandler;
@@ -16,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -29,21 +33,19 @@ public class SectionService implements SectionServiceInterface{
     private final SectionRepository sectionRepository;
     private final CompanyService companyService;
     private final PasswordEncoder passwordEncoder;
+    private final TaskRepository taskRepository;
 
     @Override
     public List<ResponseSectionDTO> findAllSections(User user) {
         log.info("[inicia] SectionService - findAllSections");
         AuthorityChecker.requireManagerAuthority(user);
-        var company = user.getCompany();
-        var responseCompany = ResponseCompanyChildDTO.builder()
-                .id(company.getId())
-                .name(company.getName())
-                .build();
+        var companyResponse = companyService.buildResponseCompanyChildDTOFromCompany(user.getCompany());
 
-        List<ResponseSectionDTO> sectionList = new ArrayList<>(sectionRepository.findAllByCompany(company).stream().map(
+        List<ResponseSectionDTO> sectionList = new ArrayList<>(
+                sectionRepository.findAllByCompany(user.getCompany()).stream().map(
                 section -> ResponseSectionDTO.builder()
                         .id(section.getId())
-                        .company(responseCompany)
+                        .company(companyResponse)
                         .name(section.getName())
                         .build()
                 ).toList());
@@ -65,16 +67,24 @@ public class SectionService implements SectionServiceInterface{
         Section section = Section.builder()
                 .name(requestSectionDTO.getName())
                 .company(companyService.findById(requestSectionDTO.getCompanyId()))
+                .tasks(new ArrayList<>())
                 .build();
         log.info("[fim] SectionService - create");
         return sectionRepository.save(section);
     }
 
     @Override
+    @Transactional
     public void delete(RequestDeleteSectionDTO requestDeleteSectionDTO, User manager) {
         log.info("[inicia] SectionService - delete");
+
         PasswordHandler.validatePassword(
                 requestDeleteSectionDTO.getPasswordAuthorization(), manager.getPassword(), passwordEncoder);
+
+        if(!findById(requestDeleteSectionDTO.getId()).getCompany().getId().equals(manager.getCompany().getId()))
+            throw new UnauthorizedException("That Section does not belong to your company");
+
+        taskRepository.deleteAllBySectionId(requestDeleteSectionDTO.getId());
 
         sectionRepository.deleteById(requestDeleteSectionDTO.getId());
         log.info("[fim] SectionService - delete");
@@ -87,18 +97,17 @@ public class SectionService implements SectionServiceInterface{
                     requestUpdateSectionDTO.getPasswordAuthorization(), manager.getPassword(), passwordEncoder);
             var sectionToUpdate = this.findById(requestUpdateSectionDTO.getId());
 
-            if( sectionToUpdate == null) throw new BadRequestException("Section not found");
+            if(!sectionToUpdate.getCompany().getId().equals(manager.getCompany().getId()))
+                throw new UnauthorizedException("That Section does not belong to your company");
 
-            Section updatedSection = Section.builder()
-                    .name(requestUpdateSectionDTO.getName())
-                    .id(sectionToUpdate.getId())
-                    .company(sectionToUpdate.getCompany())
-                    .build();
+            sectionToUpdate.setName(requestUpdateSectionDTO.getName());
 
             log.info("[fim] SectionService - update");
-            return sectionRepository.save(updatedSection);
+            return sectionRepository.save(sectionToUpdate);
 
     }
+
+
 
     @Override
     public Section findById(String id) {

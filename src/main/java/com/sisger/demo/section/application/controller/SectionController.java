@@ -46,7 +46,7 @@ public class SectionController implements SectionControllerInterface {
     public ResponseEntity<Section> createSection(String token, RequestSectionDTO requestSectionDTO) {
         log.info("[inicia] SectionController - createSection");
         var user = tokenService.getUserByToken(token);
-//        AuthorityChecker.requireManagerAuthority(user);
+        AuthorityChecker.requireManagerAuthority(user);
 
         Section section = sectionService.create(requestSectionDTO, user);
 
@@ -83,6 +83,6 @@ public class SectionController implements SectionControllerInterface {
 
         log.info("[fim] SectionController - deleteSection");
 
-        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -15,6 +15,6 @@ import java.util.List;
 public class ResponseCompanyDTO {
     private String id;
     private String name;
-    private Integer cnpj;
+    private String cnpj;
     private List<Section> sections;
 }

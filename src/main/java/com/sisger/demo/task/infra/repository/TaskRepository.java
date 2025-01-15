@@ -10,6 +10,7 @@ import java.util.List;
 public interface TaskRepository extends JpaRepository<Task, String> {
 
     void deleteAllBySectionId(String selectedId);
+    void deleteAllByUserId(String selectedId);
     List<Task> findAllBySectionId(String selectedId);
     List<Task> findAllByUserId(String selectedId);
 
