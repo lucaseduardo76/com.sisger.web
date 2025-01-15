@@ -30,7 +30,7 @@ public class UserController implements UserControllerInterface{
     private final UserService userService;
 
     @Override
-    public void changePassword(String token, ChangePasswordDTO changePasswordDTO) {
+    public ResponseEntity<HttpStatus>  changePassword(String token, ChangePasswordDTO changePasswordDTO) {
         log.info("[inicia]  UserController - changePassword");
 
         userService.changePassword(validateToken(token),
@@ -38,7 +38,7 @@ public class UserController implements UserControllerInterface{
                 changePasswordDTO.getNewPassword());
 
         log.info("[fim]  UserController - changePassword");
-
+        return ResponseEntity.noContent().build();
     }
 
     @Override
@@ -92,7 +92,7 @@ public class UserController implements UserControllerInterface{
     }
 
     @Override
-    public ResponseEntity<HttpStatus> update(String token, RequestUpdateUserDTO requestUpdateUser) {
+    public ResponseEntity<HttpStatus>  update(String token, RequestUpdateUserDTO requestUpdateUser) {
         log.info("[inicia]  UserController - update");
         var user = validateToken(token);
         AuthorityChecker.requireManagerAuthority(user);
@@ -100,7 +100,7 @@ public class UserController implements UserControllerInterface{
         userService.update(requestUpdateUser, user);
 
         log.info("[fim]  UserController - update");
-        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
     @Override
@@ -113,7 +113,7 @@ public class UserController implements UserControllerInterface{
 
         log.info("[fim]  UserController - delete");
 
-        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
     private User validateToken(String token) {

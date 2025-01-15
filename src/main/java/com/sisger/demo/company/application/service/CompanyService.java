@@ -2,6 +2,7 @@ package com.sisger.demo.company.application.service;
 
 import com.sisger.demo.company.domain.Company;
 import com.sisger.demo.company.domain.dto.RequestCompanyDTO;
+import com.sisger.demo.company.domain.dto.ResponseCompanyChildDTO;
 import com.sisger.demo.company.domain.dto.ResponseCompanyDTO;
 import com.sisger.demo.company.infra.repository.CompanyRepository;
 import com.sisger.demo.exception.NotFoundException;
@@ -19,15 +20,14 @@ public class CompanyService implements CompanyServiceInteface{
 
     private final CompanyRepository companyRepository;
 
-    public ResponseCompanyDTO findByIdToRequest(String id) {
+    public ResponseCompanyChildDTO findByIdToRequest(String id) {
         log.info("[inicia] CompanyService - findByIdToRequest");
         var company = companyRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         log.info("[fim] CompanyService - findByIdToRequest");
-        return ResponseCompanyDTO.builder()
+        return ResponseCompanyChildDTO.builder()
                 .id(company.getId())
                 .name(company.getName())
                 .cnpj(company.getCnpj())
-                .sections(company.getSection())
                 .build();
     }
 
@@ -36,7 +36,7 @@ public class CompanyService implements CompanyServiceInteface{
                 () -> new NotFoundException("Company not found, verify the id"));
     }
 
-    public ResponseCompanyDTO save(RequestCompanyDTO requestcompanyDTO, User user) {
+    public ResponseCompanyChildDTO save(RequestCompanyDTO requestcompanyDTO, User user) {
         log.info("[inicia] CompanyService - save");
 
         Company company = Company.builder()
@@ -47,10 +47,18 @@ public class CompanyService implements CompanyServiceInteface{
 
         var companyResult = companyRepository.save(company);
         log.info("[fim] CompanyService - save");
-        return ResponseCompanyDTO.builder()
+        return ResponseCompanyChildDTO.builder()
                 .id(companyResult.getId())
                 .name(companyResult.getName())
                 .cnpj(companyResult.getCnpj())
+                .build();
+    }
+
+    public ResponseCompanyChildDTO buildResponseCompanyChildDTOFromCompany(Company company){
+        return ResponseCompanyChildDTO.builder()
+                .id(company.getId())
+                .name(company.getName())
+                .cnpj(company.getCnpj())
                 .build();
     }
 

@@ -13,10 +13,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RequestCompanyDTO {
 
-    @NotNull
+
     private String name;
-    @Size(min = 11, max = 50)
-    private Integer cnpj;
+    private String cnpj;
 
 
 }

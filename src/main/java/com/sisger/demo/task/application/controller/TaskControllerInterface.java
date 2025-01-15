@@ -27,12 +27,12 @@ public interface TaskControllerInterface {
     @PostMapping("/create")
     ResponseEntity<ResponseTaskDTO> save(@RequestHeader(name = "Authorization", required = true) String token,
                                                @RequestBody RequestTaskDTO requestTaskDTOTask);
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete")
     ResponseEntity<HttpStatus> delete(@RequestHeader(name = "Authorization", required = true) String token,
-                                      @PathVariable String id);
+                                      @RequestParam String id);
 
-    @PostMapping("/change-status")
-    ResponseEntity<List<ResponseTaskDTO>> changeStatus(
+    @PutMapping("/change-status")
+    ResponseEntity<HttpStatus> changeStatus(
             @RequestHeader(name = "Authorization", required = true) String token,
             @RequestBody RequestChangeStatusTaskDTO requestChangeStatusTaskDTO);
 }

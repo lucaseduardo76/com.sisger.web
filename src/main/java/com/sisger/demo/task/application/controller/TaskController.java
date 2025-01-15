@@ -36,7 +36,7 @@ public class TaskController implements TaskControllerInterface {
         AuthorityChecker.requireManagerAuthority(user);
 
         log.info("[fim] TaskController - findAllTasksBySection");
-        return ResponseEntity.ok().body(taskService.findAllTasksBySection(sectionId));
+        return ResponseEntity.ok().body(taskService.findAllTasksBySection(sectionId, user));
     }
 
     @Override
@@ -46,7 +46,7 @@ public class TaskController implements TaskControllerInterface {
         AuthorityChecker.requireManagerAuthority(user);
 
         log.info("[fim] TaskController - findAllTasksByUser");
-        return ResponseEntity.ok().body(taskService.findAllTasksByUser(userId));
+        return ResponseEntity.ok().body(taskService.findAllTasksByUser(userId, user));
     }
 
     @Override
@@ -70,18 +70,22 @@ public class TaskController implements TaskControllerInterface {
     @Override
     public ResponseEntity<HttpStatus> delete(String token, String id) {
         log.info("[inicia] TaskController - delete");
-
+        var user = tokenService.getUserByToken(token);
+        AuthorityChecker.requireManagerAuthority(user);
+        taskService.delete(id, user);
         log.info("[fim] TaskController - delete");
         return null;
     }
 
     @Override
-    public ResponseEntity<List<ResponseTaskDTO>> changeStatus(
+    public ResponseEntity<HttpStatus> changeStatus(
             String token, RequestChangeStatusTaskDTO requestChangeStatusTaskDTO) {
         log.info("[inicia] TaskController - changeStatus");
+        var user = tokenService.getUserByToken(token);
+        taskService.changeStatus(requestChangeStatusTaskDTO, user);
 
         log.info("[fim] TaskController - changeStatus");
-        return null;
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 
