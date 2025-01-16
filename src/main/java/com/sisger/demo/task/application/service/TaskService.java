@@ -65,8 +65,8 @@ public class TaskService implements TaskServiceInterface{
                         .id(task.getId())
                         .title(task.getTitle())
                         .description(task.getDescription())
-                        .initialDate(handleFormatdDate(task.getInitialDate()))
-                        .finalDate(handleFormatdDate(task.getFinalDate()))
+                        .initialDate(task.getInitialDate())
+                        .finalDate(task.getFinalDate())
                         .employeeMessage(task.getEmployeeMessage())
                         .status(task.getStatus())
                         .employee(convertUserToResponseUserToTaskDTO(task.getUser()))
@@ -97,8 +97,8 @@ public class TaskService implements TaskServiceInterface{
                         .id(task.getId())
                         .title(task.getTitle())
                         .description(task.getDescription())
-                        .initialDate(handleFormatdDate(task.getInitialDate()))
-                        .finalDate(handleFormatdDate(task.getFinalDate()))
+                        .initialDate(task.getInitialDate())
+                        .finalDate(task.getFinalDate())
                         .employeeMessage(task.getEmployeeMessage())
                         .status(task.getStatus())
                         .section(convertSectionToResponseDTO(task.getSection()))
@@ -183,12 +183,7 @@ public class TaskService implements TaskServiceInterface{
         log.info("[fim] TaskService - changeStatus");
     }
 
-    private LocalDate handleFormatdDate(LocalDate date){
-        log.info("[inicia] TaskService - handleFormatdDate");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        log.info("[fim] TaskService - handleFormatdDate");
-        return LocalDate.parse(date.format(formatter),formatter);
-    }
+
 
     private ResponseUserToTaskDTO convertUserToResponseUserToTaskDTO(User user){
         log.info("[inicia] TaskService - convertUserToResponseUserToTaskDTO");
@@ -220,8 +215,8 @@ public class TaskService implements TaskServiceInterface{
                 .id(task.getId())
                 .title(task.getTitle())
                 .description(task.getDescription())
-                .initialDate(handleFormatdDate(task.getInitialDate()))
-                .finalDate(handleFormatdDate(task.getFinalDate()))
+                .initialDate(task.getInitialDate())
+                .finalDate(task.getFinalDate())
                 .employeeMessage(task.getEmployeeMessage())
                 .status(task.getStatus())
                 .employee(convertUserToResponseUserToTaskDTO(task.getUser()))

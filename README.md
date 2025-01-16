@@ -44,11 +44,11 @@ spring:
 ## Como Rodar o Projeto
 1. Clone o repositório:
    ```bash
-   git clone <url-do-repositorio>
+   git clone https://github.com/lucaseduardo76/com.sisger.web.git
    ```
 2. Acesse a pasta do projeto:
    ```bash
-   cd sisger
+   cd com.sisger.web
    ```
 3. Compile e rode o projeto:
    ```bash
@@ -59,12 +59,6 @@ spring:
 ## Documentação da API
 A aplicação utiliza o **Swagger** para documentar os endpoints da API. Após iniciar o projeto, acesse a documentação através de:
 - `http://localhost:8080/swagger-ui.html` ou `http://localhost:8080/swagger-ui/`
-
-## Rotas Principais
-- **POST /api/empresas**: Criar uma nova empresa.
-- **POST /api/usuarios**: Criar gerentes ou funcionários.
-- **POST /api/tarefas**: Atribuir uma tarefa a um funcionário.
-- **GET /api/tarefas**: Listar tarefas.
 
 > **Nota**: A autenticação via JWT é necessária para acessar as rotas protegidas.
 
