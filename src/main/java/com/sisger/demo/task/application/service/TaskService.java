@@ -57,6 +57,11 @@ public class TaskService implements TaskServiceInterface{
 
         List<Task> taskList = taskRepository.findAllBySectionId(sectionId);
 
+        if(taskList == null)
+            throw new NotFoundException("Tasks not found, verify the section Id");
+
+        handleListOfTasksToSetStatusIfLate(taskList);
+
         if(taskRepository.findAllBySectionId(sectionId) == null)
             throw new NotFoundException("Section not found");
 
@@ -65,8 +70,8 @@ public class TaskService implements TaskServiceInterface{
                         .id(task.getId())
                         .title(task.getTitle())
                         .description(task.getDescription())
-                        .initialDate(handleFormatdDate(task.getInitialDate()))
-                        .finalDate(handleFormatdDate(task.getFinalDate()))
+                        .initialDate(task.getInitialDate())
+                        .finalDate(task.getFinalDate())
                         .employeeMessage(task.getEmployeeMessage())
                         .status(task.getStatus())
                         .employee(convertUserToResponseUserToTaskDTO(task.getUser()))
@@ -85,6 +90,8 @@ public class TaskService implements TaskServiceInterface{
         if(taskList == null)
             throw new NotFoundException("Tasks not found, verify the user Id");
 
+        handleListOfTasksToSetStatusIfLate(taskList);
+
         if(!taskList.isEmpty())
             verifyCompanyMatch(taskList.get(0).getSection().getCompany(), manager.getCompany());
 
@@ -97,8 +104,8 @@ public class TaskService implements TaskServiceInterface{
                         .id(task.getId())
                         .title(task.getTitle())
                         .description(task.getDescription())
-                        .initialDate(handleFormatdDate(task.getInitialDate()))
-                        .finalDate(handleFormatdDate(task.getFinalDate()))
+                        .initialDate(task.getInitialDate())
+                        .finalDate(task.getFinalDate())
                         .employeeMessage(task.getEmployeeMessage())
                         .status(task.getStatus())
                         .section(convertSectionToResponseDTO(task.getSection()))
@@ -111,8 +118,11 @@ public class TaskService implements TaskServiceInterface{
 
     @Override
     public ResponseTaskDTO save(RequestTaskDTO requestTaskDTOTask, User employee) {
+       log.info("[inicia] TaskService - save");
         if(requestTaskDTOTask == null)
             throw new BadRequestException("RequestTaskDTO is null");
+
+        verifyTaskDateOfCreation(requestTaskDTOTask.getInitialDate(), requestTaskDTOTask.getFinalDate());
 
         Task newTask = taskRepository.save(Task.builder()
                 .title(requestTaskDTOTask.getTitle())
@@ -170,11 +180,24 @@ public class TaskService implements TaskServiceInterface{
     public void changeStatus(RequestChangeStatusTaskDTO requestChangeStatusTaskDTO, User user) {
         log.info("[inicia] TaskService - changeStatus");
 
+        if(requestChangeStatusTaskDTO.getStatus() == null)
+            throw new BadRequestException("Status is null");
+
         Task task = this.findById(requestChangeStatusTaskDTO.getTaskId()).orElseThrow(()
                 -> new NotFoundException("Task not found"));
 
         if(!task.getUser().getId().equals(user.getId()))
             throw new UnauthorizedException("User isn't the owner of the task");
+
+        if(task.getStatus().equals(StatusRole.FINISHED))
+            throw new BadRequestException("Task is already finished");
+
+        if(requestChangeStatusTaskDTO.getStatus().equals(StatusRole.NOT_INITIALIZED)
+                || requestChangeStatusTaskDTO.getStatus().equals(StatusRole.LATE))
+            throw new BadRequestException("Invalid status");
+
+        if(setStatusIfLate(task) && !requestChangeStatusTaskDTO.getStatus().equals(StatusRole.FINISHED))
+            throw new BadRequestException("Task is already late, finish the task as soon as possible");
 
         task.setStatus(requestChangeStatusTaskDTO.getStatus());
         this.taskRepository.save(task);
@@ -183,12 +206,7 @@ public class TaskService implements TaskServiceInterface{
         log.info("[fim] TaskService - changeStatus");
     }
 
-    private LocalDate handleFormatdDate(LocalDate date){
-        log.info("[inicia] TaskService - handleFormatdDate");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        log.info("[fim] TaskService - handleFormatdDate");
-        return LocalDate.parse(date.format(formatter),formatter);
-    }
+
 
     private ResponseUserToTaskDTO convertUserToResponseUserToTaskDTO(User user){
         log.info("[inicia] TaskService - convertUserToResponseUserToTaskDTO");
@@ -220,8 +238,8 @@ public class TaskService implements TaskServiceInterface{
                 .id(task.getId())
                 .title(task.getTitle())
                 .description(task.getDescription())
-                .initialDate(handleFormatdDate(task.getInitialDate()))
-                .finalDate(handleFormatdDate(task.getFinalDate()))
+                .initialDate(task.getInitialDate())
+                .finalDate(task.getFinalDate())
                 .employeeMessage(task.getEmployeeMessage())
                 .status(task.getStatus())
                 .employee(convertUserToResponseUserToTaskDTO(task.getUser()))
@@ -234,4 +252,38 @@ public class TaskService implements TaskServiceInterface{
             throw new UnauthorizedException("It is from another company, please verify your request");
     }
 
+    private void verifyTaskDateOfCreation(LocalDate initialDate, LocalDate finalDate){
+        log.info("[inicia] TaskService - verifyTaskDateOfCreation");
+
+        if(initialDate == null || finalDate == null)
+            throw new BadRequestException("Initial date or final date is null");
+
+        if(initialDate.isBefore(LocalDate.now()))
+            throw new BadRequestException("Initial date cannot be before today");
+
+        if(finalDate.isBefore(initialDate))
+            throw new BadRequestException("Final date cannot be before initial date");
+        log.info("[fim] TaskService - verifyTaskDateOfCreation");
+    }
+
+    private void handleListOfTasksToSetStatusIfLate(List<Task> taskList){
+        log.info("[inicia] TaskService - handleListOfTasksToSetStatusIfLate");
+        taskList.forEach(this::setStatusIfLate);
+        log.info("[fim] TaskService - handleListOfTasksToSetStatusIfLate");
+    }
+
+    private boolean setStatusIfLate(Task task){
+        log.info("[inicia] TaskService - setStatusIfLate");
+        if(task.getFinalDate().isBefore(LocalDate.now())
+                && !task.getStatus().equals(StatusRole.PAUSED)
+                && !task.getStatus().equals(StatusRole.FINISHED)){
+            task.setStatus(StatusRole.LATE);
+            this.taskRepository.save(task);
+            log.info("[fim] TaskService - setStatusIfLate");
+            return true;
+        }
+
+        log.info("[fim] TaskService - setStatusIfLate");
+        return false;
+    }
 }

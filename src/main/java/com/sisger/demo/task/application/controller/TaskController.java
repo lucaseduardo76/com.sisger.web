@@ -1,7 +1,9 @@
 package com.sisger.demo.task.application.controller;
 
+import com.sisger.demo.exception.BadRequestException;
 import com.sisger.demo.infra.security.TokenService;
 import com.sisger.demo.task.application.service.TaskService;
+import com.sisger.demo.task.domain.StatusRole;
 import com.sisger.demo.task.domain.dto.RequestChangeStatusTaskDTO;
 import com.sisger.demo.task.domain.dto.RequestTaskDTO;
 import com.sisger.demo.task.domain.dto.ResponseTaskDTO;
@@ -82,6 +84,9 @@ public class TaskController implements TaskControllerInterface {
             String token, RequestChangeStatusTaskDTO requestChangeStatusTaskDTO) {
         log.info("[inicia] TaskController - changeStatus");
         var user = tokenService.getUserByToken(token);
+
+
+
         taskService.changeStatus(requestChangeStatusTaskDTO, user);
 
         log.info("[fim] TaskController - changeStatus");
