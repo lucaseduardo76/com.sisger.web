@@ -85,12 +85,7 @@ public class TaskController implements TaskControllerInterface {
         log.info("[inicia] TaskController - changeStatus");
         var user = tokenService.getUserByToken(token);
 
-        if(requestChangeStatusTaskDTO.getStatus() == null)
-            throw new BadRequestException("Status is null");
 
-        if(requestChangeStatusTaskDTO.getStatus().equals(StatusRole.NOT_INITIALIZED)
-                || requestChangeStatusTaskDTO.getStatus().equals(StatusRole.LATE))
-            throw new BadRequestException("Invalid status");
 
         taskService.changeStatus(requestChangeStatusTaskDTO, user);
 
