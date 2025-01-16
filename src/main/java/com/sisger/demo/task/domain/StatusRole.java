@@ -5,10 +5,11 @@ import lombok.Getter;
 
 @Getter
 public enum StatusRole {
-    NOT_INITIALIZED(0, "Not Initialized", "The task has not started yet."),
+
+    LATE(0, "Late", "The task has missed its deadline."),
     IN_PROGRESS(1, "In Progress", "The task is currently being worked on."),
     PAUSED(2, "Paused", "The task is temporarily on hold."),
-    LATE(3, "Late", "The task has missed its deadline."),
+    NOT_INITIALIZED(3, "Not Initialized", "The task has not started yet."),
     FINISHED(4, "Finished", "The task has been completed.");
 
     private final int index;
