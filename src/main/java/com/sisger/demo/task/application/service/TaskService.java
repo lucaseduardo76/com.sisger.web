@@ -19,7 +19,6 @@ import com.sisger.demo.task.domain.dto.ResponseTaskFindByUserDTO;
 import com.sisger.demo.task.infra.repository.TaskRepository;
 import com.sisger.demo.user.domain.User;
 import com.sisger.demo.user.domain.dto.ResponseUserToTaskDTO;
-import com.sisger.demo.user.infra.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -62,6 +61,8 @@ public class TaskService implements TaskServiceInterface{
 
         handleListOfTasksToSetStatusIfLate(taskList);
 
+        orderTaskList(taskList);
+
         if(taskRepository.findAllBySectionId(sectionId) == null)
             throw new NotFoundException("Section not found");
 
@@ -91,6 +92,8 @@ public class TaskService implements TaskServiceInterface{
             throw new NotFoundException("Tasks not found, verify the user Id");
 
         handleListOfTasksToSetStatusIfLate(taskList);
+
+        orderTaskList(taskList);
 
         if(!taskList.isEmpty())
             verifyCompanyMatch(taskList.get(0).getSection().getCompany(), manager.getCompany());
@@ -180,9 +183,6 @@ public class TaskService implements TaskServiceInterface{
     public void changeStatus(RequestChangeStatusTaskDTO requestChangeStatusTaskDTO, User user) {
         log.info("[inicia] TaskService - changeStatus");
 
-        if(requestChangeStatusTaskDTO.getStatus() == null)
-            throw new BadRequestException("Status is null");
-
         Task task = this.findById(requestChangeStatusTaskDTO.getTaskId()).orElseThrow(()
                 -> new NotFoundException("Task not found"));
 
@@ -191,6 +191,9 @@ public class TaskService implements TaskServiceInterface{
 
         if(task.getStatus().equals(StatusRole.FINISHED))
             throw new BadRequestException("Task is already finished");
+
+        if(requestChangeStatusTaskDTO.getStatus() == null)
+            throw new BadRequestException("Status is null");
 
         if(requestChangeStatusTaskDTO.getStatus().equals(StatusRole.NOT_INITIALIZED)
                 || requestChangeStatusTaskDTO.getStatus().equals(StatusRole.LATE))
@@ -201,7 +204,6 @@ public class TaskService implements TaskServiceInterface{
 
         task.setStatus(requestChangeStatusTaskDTO.getStatus());
         this.taskRepository.save(task);
-
 
         log.info("[fim] TaskService - changeStatus");
     }
@@ -286,4 +288,15 @@ public class TaskService implements TaskServiceInterface{
         log.info("[fim] TaskService - setStatusIfLate");
         return false;
     }
+
+    private void orderTaskList(List<Task> taskList){
+        log.info("[inicia] TaskService - orderByStatus");
+        taskList.sort((task1, task2) -> task1.getInitialDate().compareTo(task2.getInitialDate()));
+
+        taskList.sort((task1, task2) -> task1.getStatus().compareTo(task2.getStatus()));
+
+        log.info("[fim] TaskService - orderByStatus");
+    }
+
+
 }
