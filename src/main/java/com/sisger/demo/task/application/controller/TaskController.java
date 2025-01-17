@@ -67,27 +67,23 @@ public class TaskController implements TaskControllerInterface {
     }
 
     @Override
-    public ResponseEntity<HttpStatus> delete(String token, String id) {
+    public void delete(String token, String id) {
         log.info("[inicia] TaskController - delete");
         var user = tokenService.getUserByToken(token);
         AuthorityChecker.requireManagerAuthority(user);
         taskService.delete(id, user);
         log.info("[fim] TaskController - delete");
-        return null;
+
     }
 
     @Override
-    public ResponseEntity<HttpStatus> changeStatus(
+    public void changeStatus(
             String token, RequestChangeStatusTaskDTO requestChangeStatusTaskDTO) {
         log.info("[inicia] TaskController - changeStatus");
         var user = tokenService.getUserByToken(token);
-
-
-
         taskService.changeStatus(requestChangeStatusTaskDTO, user);
 
         log.info("[fim] TaskController - changeStatus");
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Override
