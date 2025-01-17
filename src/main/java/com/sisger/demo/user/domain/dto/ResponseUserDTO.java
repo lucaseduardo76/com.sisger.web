@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class ResponseUserDTO {
+
     private String id;
     private String name;
     private String email;

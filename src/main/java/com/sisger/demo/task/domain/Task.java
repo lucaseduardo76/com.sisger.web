@@ -22,9 +22,11 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String title;
+    @Column(columnDefinition = "TEXT")
     private String description;
     private LocalDate initialDate;
     private LocalDate finalDate;
+    @Column(columnDefinition = "TEXT")
     private String employeeMessage;
 
     private StatusRole status;

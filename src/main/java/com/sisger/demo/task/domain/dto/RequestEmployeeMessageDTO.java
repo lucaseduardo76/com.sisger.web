@@ -1,7 +1,8 @@
 package com.sisger.demo.task.domain.dto;
 
-import com.sisger.demo.task.domain.StatusRole;
+
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,11 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RequestChangeStatusTaskDTO {
-
-    @NotEmpty(message = "taskId cannot be null")
+public class RequestEmployeeMessageDTO {
+    @NotEmpty(message = "taskId cannot be empty")
     private String taskId;
-    @NotEmpty(message = "status cannot be null")
-    private StatusRole status;
-
+    @NotNull(message = "userId cannot be null")
+    private String message;
 }

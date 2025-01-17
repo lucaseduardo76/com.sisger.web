@@ -13,11 +13,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class RequestSectionDTO {
-    @NotEmpty
+    @NotEmpty(message = "companyId cannot be Empty")
     private String companyId;
-    @NotEmpty
+    @NotEmpty(message = "name cannot be Empty")
     private String name;
-    @NotEmpty
+    @NotEmpty(message = "passwordAuthorization cannot be Empty")
     private String passwordAuthorization;
 
 }

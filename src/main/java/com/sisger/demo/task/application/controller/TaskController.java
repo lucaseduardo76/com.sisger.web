@@ -4,10 +4,7 @@ import com.sisger.demo.exception.BadRequestException;
 import com.sisger.demo.infra.security.TokenService;
 import com.sisger.demo.task.application.service.TaskService;
 import com.sisger.demo.task.domain.StatusRole;
-import com.sisger.demo.task.domain.dto.RequestChangeStatusTaskDTO;
-import com.sisger.demo.task.domain.dto.RequestTaskDTO;
-import com.sisger.demo.task.domain.dto.ResponseTaskDTO;
-import com.sisger.demo.task.domain.dto.ResponseTaskFindByUserDTO;
+import com.sisger.demo.task.domain.dto.*;
 import com.sisger.demo.user.application.service.UserService;
 import com.sisger.demo.util.AuthorityChecker;
 import lombok.RequiredArgsConstructor;
@@ -91,6 +88,15 @@ public class TaskController implements TaskControllerInterface {
 
         log.info("[fim] TaskController - changeStatus");
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @Override
+    public void setEmployeMessage(String token, RequestEmployeeMessageDTO requestEmployeeMessageDTO) {
+        log.info("[inicia] TaskController - setEmployeMessage");
+        var user = tokenService.getUserByToken(token);
+        taskService.setEmployeeMessage(requestEmployeeMessageDTO, user);
+
+        log.info("[fim] TaskController - setEmployeMessage");
     }
 
 

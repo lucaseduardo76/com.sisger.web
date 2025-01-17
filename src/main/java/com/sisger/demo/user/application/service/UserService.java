@@ -13,6 +13,7 @@ import com.sisger.demo.user.domain.dto.*;
 import com.sisger.demo.user.domain.User;
 import com.sisger.demo.user.infra.repository.UserRepository;
 import com.sisger.demo.util.PasswordHandler;
+import com.sisger.demo.util.TextHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,8 +46,8 @@ public class UserService implements UserServiceInterface {
         String encryptedPassword = passwordEncoder.encode(data.getPassword());
 
         User newUser =  userRepository.save(User.builder()
-                .email(data.getEmail())
-                .name(data.getName())
+                .email(data.getEmail().toLowerCase())
+                .name(TextHandler.capitalizeWords(data.getName()))
                 .role(Role.MAIN)
                 .password(encryptedPassword)
                 .build());
@@ -74,14 +75,14 @@ public class UserService implements UserServiceInterface {
                 () -> new NotFoundException("User not found, verify the id")
         );
     }
-
+    @Override
     public void setCompanyToMain(User user, String companyId){
         log.info("[inicia]  UserService - setCompanyToMain");
         user.setCompany(companyService.findById(companyId));
         userRepository.save(user);
         log.info("[fim]  UserService - setCompanyToMain");
     }
-
+    @Override
     public void changePassword(User user, String oldPassword, String newPassword){
         log.info("[inicia]  UserService - changePassword");
         validatePassword(oldPassword, user.getPassword());
@@ -115,8 +116,8 @@ public class UserService implements UserServiceInterface {
         validateCpf(requestUserDTO.getCpf());
 
         User newUser = User.builder()
-                .email(requestUserDTO.getEmail())
-                .name(requestUserDTO.getName())
+                .email(requestUserDTO.getEmail().toLowerCase())
+                .name(TextHandler.capitalizeWords(requestUserDTO.getName()))
                 .password(passwordEncoder.encode(requestUserDTO.getPassword()))
                 .cpf(requestUserDTO.getCpf())
                 .role(requestUserDTO.getRole())
@@ -178,8 +179,8 @@ public class UserService implements UserServiceInterface {
         log.info("[inicia]  UserService - buildUserRequest");
         ResponseUserDTO usersByCompany =ResponseUserDTO.builder()
                         .id(user.getId())
-                        .name(user.getName())
-                        .email(user.getEmail())
+                        .name(TextHandler.capitalizeWords(user.getName()))
+                        .email(user.getEmail().toLowerCase())
                         .cpf(user.getCpf())
                         .role(user.getRole())
                         .company(companyService.findByIdToRequest(user.getCompany().getId()))
@@ -215,10 +216,10 @@ public class UserService implements UserServiceInterface {
 
     private void buildUpdatedUser(User userToUpdate, RequestUpdateUserDTO requestUpdateUser){
 
-        userToUpdate.setEmail(requestUpdateUser.getEmail());
+        userToUpdate.setEmail(requestUpdateUser.getEmail().toLowerCase());
         userToUpdate.setCpf(requestUpdateUser.getCpf());
         userToUpdate.setRole(requestUpdateUser.getRole());
-        userToUpdate.setName(requestUpdateUser.getName());
+        userToUpdate.setName(TextHandler.capitalizeFirstLetter(requestUpdateUser.getName()));
 
     }
 
