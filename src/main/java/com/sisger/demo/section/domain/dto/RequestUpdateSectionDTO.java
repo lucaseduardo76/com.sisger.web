@@ -1,6 +1,6 @@
 package com.sisger.demo.section.domain.dto;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestUpdateSectionDTO {
-    @NotNull
+    @NotEmpty(message = "Id cannot be Empty")
     private String id;
-    @NotNull
+    @NotEmpty(message = "Name cannot be Empty")
     private String name;
-    @NotNull
+    @NotEmpty(message = "Password cannot be Empty")
     private String passwordAuthorization;
 }

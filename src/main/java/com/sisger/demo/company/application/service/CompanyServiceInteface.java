@@ -9,5 +9,5 @@ import com.sisger.demo.user.domain.User;
 public interface CompanyServiceInteface {
     Company findById(String id);
     ResponseCompanyChildDTO save(RequestCompanyDTO request, User user);
-
+    Company findByCnpj(String cnpj);
 }

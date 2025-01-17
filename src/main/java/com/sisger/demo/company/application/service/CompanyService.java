@@ -5,8 +5,12 @@ import com.sisger.demo.company.domain.dto.RequestCompanyDTO;
 import com.sisger.demo.company.domain.dto.ResponseCompanyChildDTO;
 import com.sisger.demo.company.domain.dto.ResponseCompanyDTO;
 import com.sisger.demo.company.infra.repository.CompanyRepository;
+import com.sisger.demo.exception.BadRequestException;
 import com.sisger.demo.exception.NotFoundException;
+import com.sisger.demo.section.infra.repository.SectionRepository;
 import com.sisger.demo.user.domain.User;
+import com.sisger.demo.user.infra.repository.UserRepository;
+import com.sisger.demo.util.TextHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -19,6 +23,8 @@ import org.springframework.web.server.ResponseStatusException;
 public class CompanyService implements CompanyServiceInteface{
 
     private final CompanyRepository companyRepository;
+    private final SectionRepository sectionRepository;
+    private final UserRepository userRepository;
 
     public ResponseCompanyChildDTO findByIdToRequest(String id) {
         log.info("[inicia] CompanyService - findByIdToRequest");
@@ -39,8 +45,11 @@ public class CompanyService implements CompanyServiceInteface{
     public ResponseCompanyChildDTO save(RequestCompanyDTO requestcompanyDTO, User user) {
         log.info("[inicia] CompanyService - save");
 
+        if(this.findByCnpj(requestcompanyDTO.getCnpj()) != null)
+            throw new BadRequestException("CNPJ is already registered");
+
         Company company = Company.builder()
-                .name(requestcompanyDTO.getName())
+                .name(TextHandler.capitalizeWords(requestcompanyDTO.getName()))
                 .cnpj(requestcompanyDTO.getCnpj())
                 .mainAccount(user)
                 .build();
@@ -52,6 +61,11 @@ public class CompanyService implements CompanyServiceInteface{
                 .name(companyResult.getName())
                 .cnpj(companyResult.getCnpj())
                 .build();
+    }
+
+    @Override
+    public Company findByCnpj(String cnpj) {
+        return companyRepository.findByCnpj(cnpj);
     }
 
     public ResponseCompanyChildDTO buildResponseCompanyChildDTOFromCompany(Company company){

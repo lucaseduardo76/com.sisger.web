@@ -15,6 +15,7 @@ import com.sisger.demo.task.infra.repository.TaskRepository;
 import com.sisger.demo.user.domain.User;
 import com.sisger.demo.util.AuthorityChecker;
 import com.sisger.demo.util.PasswordHandler;
+import com.sisger.demo.util.TextHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;

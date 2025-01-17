@@ -12,13 +12,12 @@ import com.sisger.demo.section.domain.Section;
 import com.sisger.demo.section.domain.dto.ResponseSectionDTO;
 import com.sisger.demo.task.domain.StatusRole;
 import com.sisger.demo.task.domain.Task;
-import com.sisger.demo.task.domain.dto.RequestChangeStatusTaskDTO;
-import com.sisger.demo.task.domain.dto.RequestTaskDTO;
-import com.sisger.demo.task.domain.dto.ResponseTaskDTO;
-import com.sisger.demo.task.domain.dto.ResponseTaskFindByUserDTO;
+import com.sisger.demo.task.domain.dto.*;
 import com.sisger.demo.task.infra.repository.TaskRepository;
 import com.sisger.demo.user.domain.User;
 import com.sisger.demo.user.domain.dto.ResponseUserToTaskDTO;
+import com.sisger.demo.user.infra.repository.UserRepository;
+import com.sisger.demo.util.TextHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,7 @@ public class TaskService implements TaskServiceInterface{
     private final TaskRepository taskRepository;
     private final SectionService sectionService;
     private final CompanyService companyService;
-
+    private final UserRepository userRepository;
 
     @Override
     public Optional<Task> findById(String id) {
@@ -128,8 +127,8 @@ public class TaskService implements TaskServiceInterface{
         verifyTaskDateOfCreation(requestTaskDTOTask.getInitialDate(), requestTaskDTOTask.getFinalDate());
 
         Task newTask = taskRepository.save(Task.builder()
-                .title(requestTaskDTOTask.getTitle())
-                .description(requestTaskDTOTask.getDescription())
+                .title(TextHandler.capitalizeWords(requestTaskDTOTask.getTitle()))
+                .description(TextHandler.capitalizeFirstLetter(requestTaskDTOTask.getDescription()))
                 .initialDate(requestTaskDTOTask.getInitialDate())
                 .finalDate(requestTaskDTOTask.getFinalDate())
                 .status(StatusRole.NOT_INITIALIZED)
@@ -186,8 +185,7 @@ public class TaskService implements TaskServiceInterface{
         Task task = this.findById(requestChangeStatusTaskDTO.getTaskId()).orElseThrow(()
                 -> new NotFoundException("Task not found"));
 
-        if(!task.getUser().getId().equals(user.getId()))
-            throw new UnauthorizedException("User isn't the owner of the task");
+        verifyIfUserIsOwnerOfTask(task, user);
 
         if(task.getStatus().equals(StatusRole.FINISHED))
             throw new BadRequestException("Task is already finished");
@@ -208,6 +206,17 @@ public class TaskService implements TaskServiceInterface{
         log.info("[fim] TaskService - changeStatus");
     }
 
+    @Override
+    public void setEmployeeMessage(RequestEmployeeMessageDTO requestEmployeeMessageDTO, User user) {
+        log.info("[inicia] TaskService - setEmployeeMessage");
+        Task task = this.findById(requestEmployeeMessageDTO.getTaskId()).orElseThrow(
+                () -> new NotFoundException("Task Not Found"));
+
+        verifyIfUserIsOwnerOfTask(task, user);
+        task.setEmployeeMessage(requestEmployeeMessageDTO.getMessage());
+        taskRepository.save(task);
+        log.info("[fim] TaskService - setEmployeeMessage");
+    }
 
 
     private ResponseUserToTaskDTO convertUserToResponseUserToTaskDTO(User user){
@@ -298,5 +307,11 @@ public class TaskService implements TaskServiceInterface{
         log.info("[fim] TaskService - orderByStatus");
     }
 
+    private void verifyIfUserIsOwnerOfTask(Task task, User user){
+        log.info("[inicia] TaskService - verifyIfUserIsOwnerOfTask");
+        if(!task.getUser().getId().equals(user.getId()))
+            throw new BadRequestException("User is not the owner of the task, please verify your request");
+        log.info("[fim] TaskService - verifyIfUserIsOwnerOfTask");
+    }
 
 }

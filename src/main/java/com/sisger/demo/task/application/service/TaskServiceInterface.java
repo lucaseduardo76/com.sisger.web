@@ -1,10 +1,7 @@
 package com.sisger.demo.task.application.service;
 
 import com.sisger.demo.task.domain.Task;
-import com.sisger.demo.task.domain.dto.RequestChangeStatusTaskDTO;
-import com.sisger.demo.task.domain.dto.RequestTaskDTO;
-import com.sisger.demo.task.domain.dto.ResponseTaskDTO;
-import com.sisger.demo.task.domain.dto.ResponseTaskFindByUserDTO;
+import com.sisger.demo.task.domain.dto.*;
 import com.sisger.demo.user.domain.User;
 
 
@@ -28,4 +25,6 @@ public interface TaskServiceInterface {
     void deleteAllFromUser(User user, User manager);
 
     void changeStatus(RequestChangeStatusTaskDTO requestChangeStatusTaskDTO, User user);
+
+    void setEmployeeMessage(RequestEmployeeMessageDTO requestEmployeeMessageDTO, User user);
 }

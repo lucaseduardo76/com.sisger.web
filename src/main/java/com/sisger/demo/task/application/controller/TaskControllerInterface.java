@@ -1,10 +1,8 @@
 package com.sisger.demo.task.application.controller;
 
 
-import com.sisger.demo.task.domain.dto.RequestChangeStatusTaskDTO;
-import com.sisger.demo.task.domain.dto.RequestTaskDTO;
-import com.sisger.demo.task.domain.dto.ResponseTaskDTO;
-import com.sisger.demo.task.domain.dto.ResponseTaskFindByUserDTO;
+import com.sisger.demo.task.domain.dto.*;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +24,7 @@ public interface TaskControllerInterface {
 
     @PostMapping("/create")
     ResponseEntity<ResponseTaskDTO> save(@RequestHeader(name = "Authorization", required = true) String token,
-                                               @RequestBody RequestTaskDTO requestTaskDTOTask);
+                                               @RequestBody @Valid RequestTaskDTO requestTaskDTOTask);
     @DeleteMapping("/delete")
     ResponseEntity<HttpStatus> delete(@RequestHeader(name = "Authorization", required = true) String token,
                                       @RequestParam String id);
@@ -34,5 +32,10 @@ public interface TaskControllerInterface {
     @PutMapping("/change-status")
     ResponseEntity<HttpStatus> changeStatus(
             @RequestHeader(name = "Authorization", required = true) String token,
-            @RequestBody RequestChangeStatusTaskDTO requestChangeStatusTaskDTO);
+            @RequestBody @Valid RequestChangeStatusTaskDTO requestChangeStatusTaskDTO);
+
+    @PatchMapping("/employee-messagee")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void setEmployeMessage(@RequestHeader(name = "Authorization", required = true) String token,
+                           @RequestBody @Valid RequestEmployeeMessageDTO requestEmployeeMessageDTO);
 }

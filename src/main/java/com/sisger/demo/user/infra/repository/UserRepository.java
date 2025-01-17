@@ -17,4 +17,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     User findByCpf(String cpf);
 
     List<User> findAllByCompany(Company company);
+
+
 }
