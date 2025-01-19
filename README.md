@@ -3,7 +3,7 @@
 Sisger é o back-end de um sistema desenvolvido com Java Spring Boot para gestão de equipes. Este projeto permite a criação e gerenciamento de empresas, gerentes, funcionários e atribuição de tarefas.
 
 ## Tecnologias Utilizadas
-- **Java**: Linguagem principal (requer JDK 17).
+- **Java**: Linguagem principal (requer JDK 17)
 - **Spring Boot**: Framework para criação do back-end.
 - **JPA (Java Persistence API)**: Para mapeamento e gerenciamento de banco de dados.
 - **JWT (JSON Web Token)**: Para autenticação e autorização.
